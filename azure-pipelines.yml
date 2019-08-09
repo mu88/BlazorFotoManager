@@ -16,6 +16,12 @@ steps:
     packageType: 'sdk'
     version: '3.0.100-preview7-012821'
 
+- task: DotNetCoreInstaller@0
+  displayName: Install .NET Core 2.2 SDK
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.0'
+
 - script: |
     dotnet tool install ElectronNET.CLI -g
   displayName: 'Install global tool ElectronNET.CLI'
