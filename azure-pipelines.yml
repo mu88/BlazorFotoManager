@@ -1,0 +1,26 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: Install Latest .NET Core 3.0 SDK
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.100-preview7-012821'
+
+- script: |
+    dotnet tool install ElectronNET.CLI -g
+  displayName: 'Install global tool ElectronNET.CLI'
+
+- script: |
+    cd FotoManager
+    electronize build /target win
+  displayName: 'Build Windows app with ElectronNET'
