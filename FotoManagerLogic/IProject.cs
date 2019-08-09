@@ -20,7 +20,9 @@ namespace FotoManagerLogic
 
         string ExportStatus { get; }
 
-        void Save();
+        int ExportProgressValue { get; }
+
+        void Save(string projectPath);
 
         void ExportImages(string exportPath);
 

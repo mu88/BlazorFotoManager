@@ -1,11 +1,20 @@
-﻿using FotoManagerLogic;
+﻿using System.Threading.Tasks;
+using FotoManagerLogic;
 
 namespace FotoManager
 {
     public interface IProjectService
     {
-        IProject LoadProject(string projectPath);
-
         IProject CurrentProject { get; }
+
+        bool ProjectLoaded { get; }
+
+        void LoadProject();
+
+        void LoadImages();
+
+        void SaveProject();
+
+        void Export();
     }
 }

@@ -1,46 +1,52 @@
 ﻿@page "/"
-@inject ProjectService ProjectService
+@inject IProjectService ProjectService
 
 <div class="pos-f-t">
     <nav class="navbar navbar-dark bg-dark">
-        <button>
+        <button @onclick="@LoadImages">
             <span class="fa fa-plus-square fa-sm"></span>
             <br>
             <span class="small">Bilder laden</span>
         </button>
-        <button>
+        <button @onclick="@OpenProject">
             <span class="fa fa-folder-open fa-sm"></span>
             <br>
             <span class="small">Projekt öffnen</span>
         </button>
-        <button *ngIf="project.images.length > 0">
-            <span class="fa fa-save fa-sm"></span>
-            <br>
-            <span class="small">Projekt speichern</span>
-        </button>
-        <button *ngIf="project.sumOfCopies > 0">
-            <span class="fa fa-clone fa-sm"></span>
-            <br>
-            <span class="small">Bilder exportieren</span>
-        </button>
+        @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.NumberOfImages > 0)
+        {
+            <button @onclick="@SaveProject">
+                <span class="fa fa-save fa-sm"></span>
+                <br>
+                <span class="small">Projekt speichern</span>
+            </button>
+        }
+        @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.SumOfCopies > 0)
+        {
+            <button @onclick="@Export">
+                <span class="fa fa-clone fa-sm"></span>
+                <br>
+                <span class="small">Bilder exportieren</span>
+            </button>
+        }
     </nav>
 </div>
 <div class="container">
     <div class="row">
         <div class="col">
-            @if (ProjectService.CurrentProject.DuringExport)
+            @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.DuringExport)
             {
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" [style.width]="project.progressValue + '%'" [attr.aria-valuenow]="project.progressValue" aria-valuemin="0" aria-valuemax="100">{{ project.progressValue }} %</div>
+                    <div class="progress-bar" role="progressbar">@ProjectService.CurrentProject.ExportProgressValue %</div>
                 </div>
             }
-            @if (!string.IsNullOrWhiteSpace(ProjectService.CurrentProject.ExportStatus))
+            @if (ProjectService.ProjectLoaded && !string.IsNullOrWhiteSpace(ProjectService.CurrentProject.ExportStatus))
             {
                 <div class="alert alert-success" role="alert">@ProjectService.CurrentProject.ExportStatus</div>
             }
         </div>
     </div>
-    @if (!ProjectService.CurrentProject.DuringExport && ProjectService.CurrentProject.NumberOfImages > 0)
+    @if (ProjectService.ProjectLoaded && !ProjectService.CurrentProject.DuringExport && ProjectService.CurrentProject.NumberOfImages > 0)
     {
         <div class="row">
             <div class="col">
@@ -48,22 +54,22 @@
                     <div class="card-body">
                         <h5 class="card-title text-dark">Aktuelles Bild (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Bild zurück">
+                            <button title="1 Bild zurück" @onclick="@PreviousImage">
                                 <span class="fa fa-chevron-circle-left fa-lg text-dark"></span>
                                 1 Bild zurück
                             </button>
-                            <button title="1 Bild vorwärts">
+                            <button title="1 Bild vorwärts" @onclick="@NextImage">
                                 <span class="fa fa-chevron-circle-right fa-lg text-dark"></span>
                                 1 Bild vorwärts
                             </button>
                             Bild @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Kopie hinzufügen">
+                            <button title="1 Kopie hinzufügen" @onclick="@Increase">
                                 <span class="fa fa-plus-circle fa-lg text-dark"></span>
                                 1 Kopie hinzufügen
                             </button>
-                            <button title="1 Kopie entfernen">
+                            <button title="1 Kopie entfernen" @onclick="@Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
                                 1 Kopie entfernen
                             </button>
@@ -83,16 +89,56 @@
             </div>
         </div>
     }
-    <div class="row">
-        <div class="col">
-            <img src="file:///D:/temp/P1020173.JPG" />
-            <img src="file:///D:\temp\P1020173.JPG" />
+    @if (ProjectService.ProjectLoaded)
+    {
+        <div class="row">
+            <div class="col">
+                <img src="file:///D:/temp/P1020173.JPG"/>
+            </div>
         </div>
-        <!-- <div *ngIf="project.currentImage.isLandscape" class="col">
-          <img class="img-fluid" [src]="domSanitizationService.bypassSecurityTrustUrl(project.currentImage.path)" id="img" />
-        </div>
-        <div *ngIf="!project.currentImage.isLandscape" class="col">
-          <img class="img-fluid" [src]="domSanitizationService.bypassSecurityTrustUrl(project.currentImage.path)" id="img" />
-        </div> -->
-    </div>
+    }
 </div>
+
+@code
+{
+
+    void LoadImages()
+    {
+        ProjectService.LoadImages();
+    }
+
+    void NextImage()
+    {
+        ProjectService.CurrentProject.NextImage();
+    }
+
+    void PreviousImage()
+    {
+        ProjectService.CurrentProject.PreviousImage();
+    }
+
+    void Increase()
+    {
+        ProjectService.CurrentProject.CurrentImage.Increase();
+    }
+
+    void Decrease()
+    {
+        ProjectService.CurrentProject.CurrentImage.Decrease();
+    }
+
+    void OpenProject()
+    {
+        ProjectService.LoadProject();
+    }
+
+    void SaveProject()
+    {
+        ProjectService.SaveProject();
+    }
+
+    void Export()
+    {
+        ProjectService.Export();
+    }
+}

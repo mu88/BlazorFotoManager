@@ -6,10 +6,10 @@
 
         int NumberOfCopies { get; }
 
+        string FileName { get; }
+
         void Increase();
 
         void Decrease();
-
-        string FileName { get; }
     }
 }

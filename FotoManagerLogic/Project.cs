@@ -7,12 +7,12 @@ namespace FotoManagerLogic
     public class Project : IProject
     {
         /// <inheritdoc />
-        public Project(string projectPath, IEnumerable<IImage> images)
+        public Project(IEnumerable<IImage> images)
         {
-            ProjectPath = projectPath;
             Images = images;
             CurrentImageIndex = 0;
             DuringExport = false;
+            ExportProgressValue = 0;
         }
 
         /// <inheritdoc />
@@ -31,10 +31,20 @@ namespace FotoManagerLogic
         public IImage CurrentImage => Images.ElementAt(CurrentImageIndex);
 
         /// <inheritdoc />
-        public int CurrentImageIndex { get; private set; }
+        public int ExportProgressValue { get; }
 
         /// <inheritdoc />
-        public void Save()
+        public bool DuringExport { get; }
+
+        /// <inheritdoc />
+        public string ExportStatus { get; }
+
+        /// <inheritdoc />
+        public int CurrentImageIndex { get; private set; }
+
+        /// <param name="projectPath"></param>
+        /// <inheritdoc />
+        public void Save(string projectPath)
         {
             throw new NotImplementedException();
         }
@@ -62,11 +72,5 @@ namespace FotoManagerLogic
                 CurrentImageIndex--;
             }
         }
-
-        /// <inheritdoc />
-        public bool DuringExport { get; }
-
-        /// <inheritdoc />
-        public string ExportStatus { get; }
     }
 }
