@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using ElectronNET.API;
+using FotoManagerLogic;
+using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,8 @@ namespace FotoManager
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<IProjectService, ProjectService>();
+            services.AddSingleton<IFileSystem, FileSystem>();
+            services.AddSingleton<IFileHandler, JsonFileHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

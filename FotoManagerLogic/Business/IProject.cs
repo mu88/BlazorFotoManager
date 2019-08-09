@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace FotoManagerLogic
+namespace FotoManagerLogic.Business
 {
     public interface IProject
     {
-        string ProjectPath { get; }
-
         IEnumerable<IImage> Images { get; }
 
         int NumberOfImages { get; }
@@ -22,7 +21,9 @@ namespace FotoManagerLogic
 
         int ExportProgressValue { get; }
 
-        void Save(string projectPath);
+        string ProjectPath { get; set; }
+
+        Task SaveAsync();
 
         void ExportImages(string exportPath);
 

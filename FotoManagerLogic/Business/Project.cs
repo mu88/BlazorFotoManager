@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using FotoManagerLogic.DTO;
+using FotoManagerLogic.IO;
 
-namespace FotoManagerLogic
+namespace FotoManagerLogic.Business
 {
     public class Project : IProject
     {
         /// <inheritdoc />
-        public Project(IEnumerable<IImage> images)
+        public Project(IEnumerable<IImage> images, IFileHandler fileHandler)
         {
             Images = images;
+            FileHandler = fileHandler;
             CurrentImageIndex = 0;
             DuringExport = false;
             ExportProgressValue = 0;
         }
 
         /// <inheritdoc />
-        public string ProjectPath { get; }
+        public string ProjectPath { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IImage> Images { get; }
@@ -42,11 +47,13 @@ namespace FotoManagerLogic
         /// <inheritdoc />
         public int CurrentImageIndex { get; private set; }
 
-        /// <param name="projectPath"></param>
+        private IFileHandler FileHandler { get; }
+
         /// <inheritdoc />
-        public void Save(string projectPath)
+        public async Task SaveAsync()
         {
-            throw new NotImplementedException();
+            var projectDto = GetProjectDto();
+            await FileHandler.WriteAsync(projectDto, ProjectPath);
         }
 
         /// <inheritdoc />
@@ -71,6 +78,21 @@ namespace FotoManagerLogic
             {
                 CurrentImageIndex--;
             }
+        }
+
+        private ProjectDto GetProjectDto()
+        {
+            var result = new ProjectDto { ProjectPath = ProjectPath, CurrentImageIndex = CurrentImageIndex };
+
+            var images = new Collection<ImageDto>();
+            foreach (var image in Images)
+            {
+                images.Add(new ImageDto { Path = image.Path, NumberOfCopies = image.NumberOfCopies });
+            }
+
+            result.Images = images;
+
+            return result;
         }
     }
 }

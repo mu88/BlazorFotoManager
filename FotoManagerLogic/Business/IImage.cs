@@ -1,4 +1,4 @@
-﻿namespace FotoManagerLogic
+﻿namespace FotoManagerLogic.Business
 {
     public interface IImage
     {
