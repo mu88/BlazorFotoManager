@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace FotoManagerLogic.IO
@@ -14,9 +12,9 @@ namespace FotoManagerLogic.IO
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<string> ReadAllTextAsync(string path)
+        public async Task<string> ReadAllTextAsync(string path)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllTextAsync(path);
         }
     }
 }

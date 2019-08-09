@@ -3,10 +3,10 @@
     public class Image : IImage
     {
         /// <inheritdoc />
-        public Image(string path)
+        public Image(string path, int numberOfCopies = 0)
         {
             Path = path;
-            NumberOfCopies = 0;
+            NumberOfCopies = numberOfCopies;
         }
 
         /// <inheritdoc />

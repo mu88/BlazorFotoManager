@@ -6,8 +6,6 @@ namespace FotoManager
     {
         IProject CurrentProject { get; }
 
-        bool ProjectLoaded { get; }
-
         void LoadProject();
 
         void LoadImages();

@@ -30,5 +30,9 @@ namespace FotoManagerLogic.Business
         void NextImage();
 
         void PreviousImage();
+
+        Task LoadAsync(string projectFilePath);
+
+        void AddImages(IEnumerable<string> imageFilePaths);
     }
 }

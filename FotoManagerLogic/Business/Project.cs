@@ -11,17 +11,14 @@ namespace FotoManagerLogic.Business
     public class Project : IProject
     {
         /// <inheritdoc />
-        public Project(IEnumerable<IImage> images, IFileHandler fileHandler)
+        public Project(IFileHandler fileHandler)
         {
-            Images = images;
+            Images = new Collection<IImage>();
             FileHandler = fileHandler;
             CurrentImageIndex = 0;
             DuringExport = false;
             ExportProgressValue = 0;
         }
-
-        /// <inheritdoc />
-        public string ProjectPath { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IImage> Images { get; }
@@ -43,6 +40,9 @@ namespace FotoManagerLogic.Business
 
         /// <inheritdoc />
         public string ExportStatus { get; }
+
+        /// <inheritdoc />
+        public string ProjectPath { get; set; }
 
         /// <inheritdoc />
         public int CurrentImageIndex { get; private set; }
@@ -77,6 +77,27 @@ namespace FotoManagerLogic.Business
             if (CurrentImageIndex > 0)
             {
                 CurrentImageIndex--;
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task LoadAsync(string projectFilePath)
+        {
+            var projectDto = await FileHandler.ReadAsync<ProjectDto>(projectFilePath);
+            ProjectPath = projectDto.ProjectPath;
+            CurrentImageIndex = projectDto.CurrentImageIndex;
+            foreach (var imageDto in projectDto.Images)
+            {
+                ((Collection<IImage>)Images).Add(new Image(imageDto.Path, imageDto.NumberOfCopies));
+            }
+        }
+
+        /// <inheritdoc />
+        public void AddImages(IEnumerable<string> imageFilePaths)
+        {
+            foreach (var imageFilePath in imageFilePaths)
+            {
+                ((Collection<IImage>)Images).Add(new Image(imageFilePath));
             }
         }
 

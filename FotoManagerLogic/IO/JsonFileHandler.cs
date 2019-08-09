@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FotoManagerLogic.IO
@@ -15,9 +14,11 @@ namespace FotoManagerLogic.IO
         private IFileSystem FileSystem { get; }
 
         /// <inheritdoc />
-        public T Read<T>(string filePath)
+        public async Task<T> ReadAsync<T>(string filePath)
         {
-            throw new NotImplementedException();
+            var s = await FileSystem.ReadAllTextAsync(filePath);
+
+            return JsonSerializer.Deserialize<T>(s);
         }
 
         /// <inheritdoc />

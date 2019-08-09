@@ -13,7 +13,7 @@
             <br>
             <span class="small">Projekt öffnen</span>
         </button>
-        @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.NumberOfImages > 0)
+        @if (ProjectService.CurrentProject.NumberOfImages > 0)
         {
             <button @onclick="@SaveProject">
                 <span class="fa fa-save fa-sm"></span>
@@ -21,7 +21,7 @@
                 <span class="small">Projekt speichern</span>
             </button>
         }
-        @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.SumOfCopies > 0)
+        @if (ProjectService.CurrentProject.SumOfCopies > 0)
         {
             <button @onclick="@Export">
                 <span class="fa fa-clone fa-sm"></span>
@@ -34,19 +34,19 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            @if (ProjectService.ProjectLoaded && ProjectService.CurrentProject.DuringExport)
+            @if (ProjectService.CurrentProject.DuringExport)
             {
                 <div class="progress">
                     <div class="progress-bar" role="progressbar">@ProjectService.CurrentProject.ExportProgressValue %</div>
                 </div>
             }
-            @if (ProjectService.ProjectLoaded && !string.IsNullOrWhiteSpace(ProjectService.CurrentProject.ExportStatus))
+            @if (!string.IsNullOrWhiteSpace(ProjectService.CurrentProject.ExportStatus))
             {
                 <div class="alert alert-success" role="alert">@ProjectService.CurrentProject.ExportStatus</div>
             }
         </div>
     </div>
-    @if (ProjectService.ProjectLoaded && !ProjectService.CurrentProject.DuringExport && ProjectService.CurrentProject.NumberOfImages > 0)
+    @if (!ProjectService.CurrentProject.DuringExport && ProjectService.CurrentProject.NumberOfImages > 0)
     {
         <div class="row">
             <div class="col">
@@ -89,14 +89,11 @@
             </div>
         </div>
     }
-    @if (ProjectService.ProjectLoaded)
-    {
-        <div class="row">
-            <div class="col">
-                <img src="file:///D:/temp/P1020173.JPG"/>
-            </div>
+    <div class="row">
+        <div class="col">
+            <img src="file:///D:/temp/P1020173.JPG"/>
         </div>
-    }
+    </div>
 </div>
 
 @code
