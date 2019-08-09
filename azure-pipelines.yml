@@ -20,7 +20,7 @@ steps:
   displayName: Install .NET Core 2.2 SDK
   inputs:
     packageType: 'sdk'
-    version: '2.2.0'
+    version: '2.2.401'
 
 - script: |
     dotnet tool install ElectronNET.CLI -g
