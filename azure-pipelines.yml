@@ -11,9 +11,8 @@ pool:
 
 steps:
 - task: DotNetCoreInstaller@0
-  displayName: Install .NET Core 2.2 SDK
+  displayName: Install .NET Core 2.2
   inputs:
-    packageType: 'sdk'
     version: '2.2.401'
 
 - script: |
