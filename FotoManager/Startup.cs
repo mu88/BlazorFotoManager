@@ -23,6 +23,7 @@ namespace FotoManager
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSingleton<ProjectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +48,16 @@ namespace FotoManager
                 endpoints.MapFallbackToPage("/_Host");
             });
 
-            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
+            Task.Run(async () =>
+            {
+                var browserWindow = await Electron.WindowManager.CreateWindowAsync();
+                browserWindow.Maximize();
+
+#if DEBUG
+                browserWindow.WebContents.OpenDevTools();
+#endif
+                return browserWindow;
+            });
         }
     }
 }
