@@ -16,15 +16,15 @@ steps:
     packageType: 'sdk'
     version: '2.2.401'
 
+- script: |
+    dotnet tool install ElectronNET.CLI -g
+  displayName: 'Install global tool ElectronNET.CLI'
+
 - task: DotNetCoreInstaller@0
   displayName: Install Latest .NET Core 3.0 SDK
   inputs:
     packageType: 'sdk'
     version: '3.0.100-preview7-012821'
-
-- script: |
-    dotnet tool install ElectronNET.CLI -g
-  displayName: 'Install global tool ElectronNET.CLI'
 
 - script: |
     cd FotoManager
