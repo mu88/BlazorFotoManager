@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="assets\Icon.ico">

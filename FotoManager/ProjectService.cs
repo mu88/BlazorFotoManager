@@ -105,13 +105,17 @@ namespace FotoManager
                 ExportStatus = ExportStatus.Exporting;
 
                 // this is really not nice, but otherwise,
-                // the UI won't be refreshed before ExportImages() has finished
-                // and no status message is displayed.
+                // the UI won't be refreshed and no status message is displayed.
                 browserWindow.Reload(); 
 
                 CurrentProject.ExportImages(exportPath, browserWindow.SetProgressBar);
 
                 ExportStatus = ExportStatus.ExportSuccessful;
+                browserWindow.SetProgressBar(-1); // remove progress bar
+
+                // this is really not nice, but otherwise,
+                // the UI won't be refreshed and no status message is displayed.
+                browserWindow.Reload(); 
             }
         }
     }

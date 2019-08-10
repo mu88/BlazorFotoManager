@@ -2,36 +2,43 @@
 @using FotoManagerLogic.Business
 @inject IProjectService ProjectService
 
-<div class="pos-f-t">
-    <nav class="navbar navbar-dark bg-dark">
-        <button @onclick="@(async () => await ProjectService.LoadImagesAsync())">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.LoadImagesAsync())">
             <span class="fa fa-plus-square fa-sm"></span>
             <br>
             <span class="small">Bilder laden</span>
         </button>
-        <button @onclick="@(async () => await ProjectService.LoadProjectAsync())">
+    </div>
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.LoadProjectAsync())">
             <span class="fa fa-folder-open fa-sm"></span>
             <br>
             <span class="small">Projekt öffnen</span>
         </button>
-        @if (ProjectService.CurrentProject.NumberOfImages > 0)
-        {
-            <button @onclick="@(async () => await ProjectService.SaveProjectAsync())">
+    </div>
+    @if (ProjectService.CurrentProject.NumberOfImages > 0)
+    {
+        <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.SaveProjectAsync())">
                 <span class="fa fa-save fa-sm"></span>
                 <br>
                 <span class="small">Projekt speichern</span>
             </button>
-        }
-        @if (ProjectService.CurrentProject.SumOfCopies > 0)
-        {
-            <button @onclick="@(async () => await ProjectService.ExportAsync())">
+        </div>
+    }
+    @if (ProjectService.CurrentProject.SumOfCopies > 0)
+    {
+        <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.ExportAsync())">
                 <span class="fa fa-clone fa-sm"></span>
                 <br>
                 <span class="small">Bilder exportieren</span>
             </button>
-        }
-    </nav>
-</div>
+        </div>
+    }
+</nav>
+
 <div class="container">
     <div class="row">
         <div class="col">
@@ -41,7 +48,12 @@
             }
             else if ((ProjectService.ExportStatus == ExportStatus.Exporting))
             {
-                <div class="alert alert-warning" role="alert">Exportiere...</div>
+                <div class="alert alert-warning" role="alert">
+                    <div class="d-flex align-items-center">
+                        <strong>Exportiere...</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
             }
         </div>
     </div>
@@ -53,24 +65,20 @@
                     <div class="card-body">
                         <h5 class="card-title text-dark">Aktuelles Bild (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Bild zurück" @onclick="@ProjectService.CurrentProject.PreviousImage">
+                            <button type="button" class="btn btn-link" title="1 Bild zurück" @onclick="@ProjectService.CurrentProject.PreviousImage">
                                 <span class="fa fa-chevron-circle-left fa-lg text-dark"></span>
-                                1 Bild zurück
                             </button>
-                            <button title="1 Bild vorwärts" @onclick="@ProjectService.CurrentProject.NextImage">
+                            <button type="button" class="btn btn-link" title="1 Bild vorwärts" @onclick="@ProjectService.CurrentProject.NextImage">
                                 <span class="fa fa-chevron-circle-right fa-lg text-dark"></span>
-                                1 Bild vorwärts
                             </button>
                             Bild @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
+                            <button type="button" class="btn btn-link" title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
                                 <span class="fa fa-plus-circle fa-lg text-dark"></span>
-                                1 Kopie hinzufügen
                             </button>
-                            <button title="1 Kopie entfernen" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
+                            <button type="button" class="btn btn-link" title="1 Kopie entfernen" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
-                                1 Kopie entfernen
                             </button>
                             Anzahl Kopien: @ProjectService.CurrentProject.CurrentImage.NumberOfCopies
                         </p>
@@ -88,9 +96,12 @@
             </div>
         </div>
     }
-    <div class="row">
-        <div class="col">
-            <img src="file:///D:/temp/P1020173.JPG"/>
+    @if (ProjectService.CurrentProject.CurrentImage != null)
+    {
+        <div class="row">
+            <div class="col">
+                <img class="img-fluid" src="file:///@ProjectService.CurrentProject.CurrentImage.Path"/>
+            </div>
         </div>
-    </div>
+    }
 </div>

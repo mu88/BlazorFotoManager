@@ -62,7 +62,7 @@ namespace FotoManager
                                                                    @"assets\Icon.ico")
                                            };
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(browserWindowOptions);
-                browserWindow.SetAutoHideMenuBar(true);
+                browserWindow.SetMenuBarVisibility(false);
                 browserWindow.Maximize();
 
 #if DEBUG

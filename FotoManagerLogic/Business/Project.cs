@@ -28,7 +28,7 @@ namespace FotoManagerLogic.Business
         public int SumOfCopies => Images.Sum(x => x.NumberOfCopies);
 
         /// <inheritdoc />
-        public IImage CurrentImage => Images.ElementAt(CurrentImageIndex);
+        public IImage CurrentImage => Images.ElementAtOrDefault(CurrentImageIndex);
 
         /// <inheritdoc />
         public string ProjectPath { get; set; }
