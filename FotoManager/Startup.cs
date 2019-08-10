@@ -1,6 +1,8 @@
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using ElectronNET.API;
-using FotoManagerLogic;
+using ElectronNET.API.Entities;
 using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,7 +56,13 @@ namespace FotoManager
 
             Task.Run(async () =>
             {
-                var browserWindow = await Electron.WindowManager.CreateWindowAsync();
+                var browserWindowOptions = new BrowserWindowOptions
+                                           {
+                                               Icon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                                                   @"assets\Icon.ico")
+                                           };
+                var browserWindow = await Electron.WindowManager.CreateWindowAsync(browserWindowOptions);
+                browserWindow.SetAutoHideMenuBar(true);
                 browserWindow.Maximize();
 
 #if DEBUG
