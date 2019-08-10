@@ -19,6 +19,7 @@ namespace FotoManagerLogic.Business
 
             Images = new Collection<IImage>();
             CurrentImageIndex = 0;
+            ProjectPath = string.Empty;
         }
 
         /// <inheritdoc />

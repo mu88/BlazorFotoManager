@@ -56,11 +56,8 @@ namespace FotoManager
 
             Task.Run(async () =>
             {
-                var browserWindowOptions = new BrowserWindowOptions
-                                           {
-                                               Icon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                                                   @"assets\Icon.ico")
-                                           };
+                var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+                var browserWindowOptions = new BrowserWindowOptions { Icon = Path.Combine(directoryName, @"assets\Icon.ico") };
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(browserWindowOptions);
                 browserWindow.SetMenuBarVisibility(false);
                 browserWindow.Maximize();
