@@ -3,19 +3,19 @@
 
 <div class="pos-f-t">
     <nav class="navbar navbar-dark bg-dark">
-        <button @onclick="@LoadImages">
+        <button @onclick="@ProjectService.LoadImages">
             <span class="fa fa-plus-square fa-sm"></span>
             <br>
             <span class="small">Bilder laden</span>
         </button>
-        <button @onclick="@OpenProject">
+        <button @onclick="@ProjectService.LoadProject">
             <span class="fa fa-folder-open fa-sm"></span>
             <br>
             <span class="small">Projekt öffnen</span>
         </button>
         @if (ProjectService.CurrentProject.NumberOfImages > 0)
         {
-            <button @onclick="@SaveProject">
+            <button @onclick="@ProjectService.SaveProject">
                 <span class="fa fa-save fa-sm"></span>
                 <br>
                 <span class="small">Projekt speichern</span>
@@ -23,7 +23,7 @@
         }
         @if (ProjectService.CurrentProject.SumOfCopies > 0)
         {
-            <button @onclick="@Export">
+            <button @onclick="@ProjectService.Export">
                 <span class="fa fa-clone fa-sm"></span>
                 <br>
                 <span class="small">Bilder exportieren</span>
@@ -54,22 +54,22 @@
                     <div class="card-body">
                         <h5 class="card-title text-dark">Aktuelles Bild (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Bild zurück" @onclick="@PreviousImage">
+                            <button title="1 Bild zurück" @onclick="@ProjectService.CurrentProject.PreviousImage">
                                 <span class="fa fa-chevron-circle-left fa-lg text-dark"></span>
                                 1 Bild zurück
                             </button>
-                            <button title="1 Bild vorwärts" @onclick="@NextImage">
+                            <button title="1 Bild vorwärts" @onclick="@ProjectService.CurrentProject.NextImage">
                                 <span class="fa fa-chevron-circle-right fa-lg text-dark"></span>
                                 1 Bild vorwärts
                             </button>
                             Bild @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button title="1 Kopie hinzufügen" @onclick="@Increase">
+                            <button title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
                                 <span class="fa fa-plus-circle fa-lg text-dark"></span>
                                 1 Kopie hinzufügen
                             </button>
-                            <button title="1 Kopie entfernen" @onclick="@Decrease">
+                            <button title="1 Kopie entfernen" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
                                 1 Kopie entfernen
                             </button>
@@ -95,47 +95,3 @@
         </div>
     </div>
 </div>
-
-@code
-{
-
-    void LoadImages()
-    {
-        ProjectService.LoadImages();
-    }
-
-    void NextImage()
-    {
-        ProjectService.CurrentProject.NextImage();
-    }
-
-    void PreviousImage()
-    {
-        ProjectService.CurrentProject.PreviousImage();
-    }
-
-    void Increase()
-    {
-        ProjectService.CurrentProject.CurrentImage.Increase();
-    }
-
-    void Decrease()
-    {
-        ProjectService.CurrentProject.CurrentImage.Decrease();
-    }
-
-    void OpenProject()
-    {
-        ProjectService.LoadProject();
-    }
-
-    void SaveProject()
-    {
-        ProjectService.SaveProject();
-    }
-
-    void Export()
-    {
-        ProjectService.Export();
-    }
-}
