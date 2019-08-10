@@ -74,11 +74,11 @@
                             Bild @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button type="button" class="btn btn-link" title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
-                                <span class="fa fa-plus-circle fa-lg text-dark"></span>
-                            </button>
                             <button type="button" class="btn btn-link" title="1 Kopie entfernen" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
+                            </button>
+                            <button type="button" class="btn btn-link" title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
+                                <span class="fa fa-plus-circle fa-lg text-dark"></span>
                             </button>
                             Anzahl Kopien: @ProjectService.CurrentProject.CurrentImage.NumberOfCopies
                         </p>
