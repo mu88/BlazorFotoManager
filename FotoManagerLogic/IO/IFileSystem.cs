@@ -7,5 +7,7 @@ namespace FotoManagerLogic.IO
         Task WriteAllTextAsync(string path, string contents);
 
         Task<string> ReadAllTextAsync(string path);
+
+        void Copy(string sourceFileName, string destFileName, bool overwrite);
     }
 }

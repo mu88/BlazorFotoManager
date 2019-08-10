@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FotoManagerLogic.Business
 {
     public interface IProject
     {
-        IEnumerable<IImage> Images { get; }
-
         int NumberOfImages { get; }
 
         int SumOfCopies { get; }
@@ -15,17 +14,11 @@ namespace FotoManagerLogic.Business
 
         int CurrentImageIndex { get; }
 
-        bool DuringExport { get; }
-
-        string ExportStatus { get; }
-
-        int ExportProgressValue { get; }
-
         string ProjectPath { get; set; }
 
         Task SaveAsync();
 
-        void ExportImages(string exportPath);
+        void ExportImages(string exportPath, Action<double> progressAction);
 
         void NextImage();
 

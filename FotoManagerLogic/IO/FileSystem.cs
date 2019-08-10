@@ -16,5 +16,11 @@ namespace FotoManagerLogic.IO
         {
             return await File.ReadAllTextAsync(path);
         }
+
+        /// <inheritdoc />
+        public void Copy(string sourceFileName, string destFileName, bool overwrite)
+        {
+            File.Copy(sourceFileName, destFileName, overwrite);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FotoManagerLogic.Business;
+﻿using System.Threading.Tasks;
+using FotoManagerLogic.Business;
 
 namespace FotoManager
 {
@@ -6,12 +7,14 @@ namespace FotoManager
     {
         IProject CurrentProject { get; }
 
-        void LoadProject();
+        ExportStatus ExportStatus { get; }
 
-        void LoadImages();
+        Task LoadProjectAsync();
 
-        void SaveProject();
+        Task LoadImagesAsync();
 
-        void Export();
+        Task SaveProjectAsync();
+
+        Task ExportAsync();
     }
 }

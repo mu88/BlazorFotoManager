@@ -1,21 +1,22 @@
 ﻿@page "/"
+@using FotoManagerLogic.Business
 @inject IProjectService ProjectService
 
 <div class="pos-f-t">
     <nav class="navbar navbar-dark bg-dark">
-        <button @onclick="@ProjectService.LoadImages">
+        <button @onclick="@(async () => await ProjectService.LoadImagesAsync())">
             <span class="fa fa-plus-square fa-sm"></span>
             <br>
             <span class="small">Bilder laden</span>
         </button>
-        <button @onclick="@ProjectService.LoadProject">
+        <button @onclick="@(async () => await ProjectService.LoadProjectAsync())">
             <span class="fa fa-folder-open fa-sm"></span>
             <br>
             <span class="small">Projekt öffnen</span>
         </button>
         @if (ProjectService.CurrentProject.NumberOfImages > 0)
         {
-            <button @onclick="@ProjectService.SaveProject">
+            <button @onclick="@(async () => await ProjectService.SaveProjectAsync())">
                 <span class="fa fa-save fa-sm"></span>
                 <br>
                 <span class="small">Projekt speichern</span>
@@ -23,7 +24,7 @@
         }
         @if (ProjectService.CurrentProject.SumOfCopies > 0)
         {
-            <button @onclick="@ProjectService.Export">
+            <button @onclick="@(async () => await ProjectService.ExportAsync())">
                 <span class="fa fa-clone fa-sm"></span>
                 <br>
                 <span class="small">Bilder exportieren</span>
@@ -34,19 +35,17 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            @if (ProjectService.CurrentProject.DuringExport)
+            @if (ProjectService.ExportStatus == ExportStatus.ExportSuccessful)
             {
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar">@ProjectService.CurrentProject.ExportProgressValue %</div>
-                </div>
+                <div class="alert alert-success" role="alert">Export erfolgreich abgeschlossen!</div>
             }
-            @if (!string.IsNullOrWhiteSpace(ProjectService.CurrentProject.ExportStatus))
+            else if ((ProjectService.ExportStatus == ExportStatus.Exporting))
             {
-                <div class="alert alert-success" role="alert">@ProjectService.CurrentProject.ExportStatus</div>
+                <div class="alert alert-warning" role="alert">Exportiere...</div>
             }
         </div>
     </div>
-    @if (!ProjectService.CurrentProject.DuringExport && ProjectService.CurrentProject.NumberOfImages > 0)
+    @if (ProjectService.ExportStatus != ExportStatus.Exporting && ProjectService.CurrentProject.NumberOfImages > 0)
     {
         <div class="row">
             <div class="col">

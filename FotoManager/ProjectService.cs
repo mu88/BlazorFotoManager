@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using FotoManagerLogic.Business;
@@ -10,19 +10,23 @@ namespace FotoManager
     public class ProjectService : IProjectService
     {
         /// <inheritdoc />
-        public ProjectService(IFileHandler fileHandler)
+        public ProjectService(IFileHandler fileHandler, IFileSystem fileSystem)
         {
             FileHandler = fileHandler;
-            CurrentProject = new Project(FileHandler);
+            CurrentProject = new Project(FileHandler, fileSystem);
+            ExportStatus = ExportStatus.NotExporting;
         }
 
         /// <inheritdoc />
         public IProject CurrentProject { get; }
 
+        /// <inheritdoc />
+        public ExportStatus ExportStatus { get; private set; }
+
         private IFileHandler FileHandler { get; }
 
         /// <inheritdoc />
-        public void LoadProject()
+        public async Task LoadProjectAsync()
         {
             var openDialogOptions = new OpenDialogOptions
                                     {
@@ -32,20 +36,19 @@ namespace FotoManager
                                     };
 
             // When using async/await, Blazor will not refresh the UI.
-            var projectFilePath = Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions)
-                                          .GetAwaiter()
-                                          .GetResult()
-                                          .FirstOrDefault();
+            var projectFilePath =
+                (await Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions))
+                .FirstOrDefault();
 
             if (!string.IsNullOrWhiteSpace(projectFilePath))
             {
                 // When using async/await, Blazor will not refresh the UI.
-                CurrentProject.LoadAsync(projectFilePath).GetAwaiter().GetResult();
+                await CurrentProject.LoadAsync(projectFilePath);
             }
         }
 
         /// <inheritdoc />
-        public void LoadImages()
+        public async Task LoadImagesAsync()
         {
             var openDialogOptions = new OpenDialogOptions
                                     {
@@ -53,11 +56,8 @@ namespace FotoManager
                                         Properties = new[] { OpenDialogProperty.openFile, OpenDialogProperty.multiSelections },
                                         Filters = new[] { new FileFilter { Extensions = new[] { "jpg", "png", "gif" }, Name = "Bilder" } }
                                     };
-
-            // When using async/await, Blazor will not refresh the UI.
-            var imageFilePaths = Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions)
-                                         .GetAwaiter()
-                                         .GetResult();
+            var imageFilePaths =
+                await Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions);
 
             if (imageFilePaths != null && imageFilePaths.Any())
             {
@@ -66,7 +66,7 @@ namespace FotoManager
         }
 
         /// <inheritdoc />
-        public void SaveProject()
+        public async Task SaveProjectAsync()
         {
             if (string.IsNullOrWhiteSpace(CurrentProject.ProjectPath))
             {
@@ -75,10 +75,8 @@ namespace FotoManager
                                             Title = "Bitte wählen Sie den Speicherort der Projektdatei aus",
                                             Filters = new[] { new FileFilter { Extensions = new[] { "json" }, Name = "Projektdatei" } }
                                         };
-                // When using async/await, Blazor will not refresh the UI.
-                var saveFilePath = Electron.Dialog.ShowSaveDialogAsync(Electron.WindowManager.BrowserWindows.First(), saveDialogOptions)
-                                           .GetAwaiter()
-                                           .GetResult();
+                var saveFilePath =
+                    await Electron.Dialog.ShowSaveDialogAsync(Electron.WindowManager.BrowserWindows.First(), saveDialogOptions);
 
                 if (string.IsNullOrWhiteSpace(saveFilePath))
                 {
@@ -88,14 +86,33 @@ namespace FotoManager
                 CurrentProject.ProjectPath = saveFilePath;
             }
 
-            // When using async/await, Blazor will not refresh the UI.
-            CurrentProject.SaveAsync().GetAwaiter().GetResult();
+            await CurrentProject.SaveAsync();
         }
 
         /// <inheritdoc />
-        public void Export()
+        public async Task ExportAsync()
         {
-            throw new NotImplementedException();
+            var openDialogOptions = new OpenDialogOptions
+                                    {
+                                        Title = "Bitte wählen Sie den Speicherort aus",
+                                        Properties = new[] { OpenDialogProperty.openDirectory }
+                                    };
+            var browserWindow = Electron.WindowManager.BrowserWindows.First();
+            var exportPath = (await Electron.Dialog.ShowOpenDialogAsync(browserWindow, openDialogOptions)).FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(exportPath))
+            {
+                ExportStatus = ExportStatus.Exporting;
+
+                // this is really not nice, but otherwise,
+                // the UI won't be refreshed before ExportImages() has finished
+                // and no status message is displayed.
+                browserWindow.Reload(); 
+
+                CurrentProject.ExportImages(exportPath, browserWindow.SetProgressBar);
+
+                ExportStatus = ExportStatus.ExportSuccessful;
+            }
         }
     }
 }

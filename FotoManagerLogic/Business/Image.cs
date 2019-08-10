@@ -13,7 +13,7 @@
         public string Path { get; }
 
         /// <inheritdoc />
-        public string FileName => System.IO.Path.GetFileName(Path);
+        public string FileName => System.IO.Path.GetFileNameWithoutExtension(Path);
 
         /// <inheritdoc />
         public int NumberOfCopies { get; private set; }
