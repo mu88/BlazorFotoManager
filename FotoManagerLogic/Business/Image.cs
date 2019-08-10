@@ -1,4 +1,7 @@
-﻿namespace FotoManagerLogic.Business
+﻿using System.Linq;
+using MetadataExtractor;
+
+namespace FotoManagerLogic.Business
 {
     public class Image : IImage
     {
@@ -14,6 +17,27 @@
 
         /// <inheritdoc />
         public string FileName => System.IO.Path.GetFileNameWithoutExtension(Path);
+
+        /// <inheritdoc />
+        public string Orientation
+        {
+            get
+            {
+                var result = string.Empty;
+
+                foreach (var directory in ImageMetadataReader.ReadMetadata(Path))
+                {
+                    var tag = directory.Tags.FirstOrDefault(x => x.Name == "Orientation");
+                    if (tag != null)
+                    {
+                        result = tag.Description;
+                        break;
+                    }
+                }
+
+                return result;
+            }
+        }
 
         /// <inheritdoc />
         public int NumberOfCopies { get; private set; }

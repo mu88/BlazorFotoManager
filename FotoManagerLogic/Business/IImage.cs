@@ -8,6 +8,8 @@
 
         string FileName { get; }
 
+        string Orientation { get; }
+
         void Increase();
 
         void Decrease();
