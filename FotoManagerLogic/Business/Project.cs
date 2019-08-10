@@ -88,7 +88,7 @@ namespace FotoManagerLogic.Business
         public async Task LoadAsync(string projectFilePath)
         {
             var projectDto = await FileHandler.ReadAsync<ProjectDto>(projectFilePath);
-            ProjectPath = projectDto.ProjectPath;
+            ProjectPath = projectFilePath;
             CurrentImageIndex = projectDto.CurrentImageIndex;
             foreach (var imageDto in projectDto.Images)
             {
@@ -107,7 +107,7 @@ namespace FotoManagerLogic.Business
 
         private ProjectDto GetProjectDto()
         {
-            var result = new ProjectDto { ProjectPath = ProjectPath, CurrentImageIndex = CurrentImageIndex };
+            var result = new ProjectDto { CurrentImageIndex = CurrentImageIndex };
 
             var images = new Collection<ImageDto>();
             foreach (var image in Images)

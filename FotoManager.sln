@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FotoManager", "FotoManager\FotoManager.csproj", "{FCCD8EF7-2EBE-4CDB-9F51-625B6BD135FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FotoManagerLogic", "FotoManagerLogic\FotoManagerLogic.csproj", "{BCE68AEF-600A-462B-9C50-1548841495CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FotoManagerLogic", "FotoManagerLogic\FotoManagerLogic.csproj", "{BCE68AEF-600A-462B-9C50-1548841495CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{851B3A11-DC3D-4BDB-BD10-B9A366CC3016}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BCE68AEF-600A-462B-9C50-1548841495CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCE68AEF-600A-462B-9C50-1548841495CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCE68AEF-600A-462B-9C50-1548841495CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{851B3A11-DC3D-4BDB-BD10-B9A366CC3016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{851B3A11-DC3D-4BDB-BD10-B9A366CC3016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{851B3A11-DC3D-4BDB-BD10-B9A366CC3016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{851B3A11-DC3D-4BDB-BD10-B9A366CC3016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
