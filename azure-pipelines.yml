@@ -28,9 +28,9 @@ steps:
 
 - script: |
     mkdir -p /FotoManager/obj/desktop/win
-    pushd /FotoManager/obj/desktop/win
+    cd /FotoManager/obj/desktop/win
     sudo npm install electron-builder --global
-    popd
+    cd /../../../..
   displayName: 'Install global tool electron-builder'
 
 - script: |
