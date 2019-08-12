@@ -30,13 +30,13 @@ steps:
     mkdir -p /FotoManager/obj/desktop/win
     cd /FotoManager/obj/desktop/win
     sudo npm install electron-builder --global
-    echo %cd%
+    echo $PWD
     cd /../../../..
-    echo %cd%
+    echo $PWD
   displayName: 'Install global tool electron-builder'
 
 - script: |
-    echo %cd%
+    echo $PWD
     cd /FotoManager
     electronize build /target win
   displayName: 'Build Windows app with ElectronNET'
