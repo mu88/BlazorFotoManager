@@ -27,7 +27,9 @@ steps:
   displayName: 'Install global tool ElectronNET.CLI'
 
 - script: |
+    pushd /home/vsts/work/1/s/FotoManager/obj/desktop/win
     sudo npm install electron-builder --global
+    popd
   displayName: 'Install global tool electron-builder'
 
 - script: |
