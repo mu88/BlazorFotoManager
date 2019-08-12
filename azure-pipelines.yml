@@ -27,12 +27,13 @@ steps:
   displayName: 'Install global tool ElectronNET.CLI'
 
 - script: |
-    pushd /home/vsts/work/1/s/FotoManager/obj/desktop/win
+    mkdir -p /FotoManager/obj/desktop/win
+    pushd /FotoManager/obj/desktop/win
     sudo npm install electron-builder --global
     popd
   displayName: 'Install global tool electron-builder'
 
 - script: |
-    cd FotoManager
+    cd /FotoManager
     electronize build /target win
   displayName: 'Build Windows app with ElectronNET'
