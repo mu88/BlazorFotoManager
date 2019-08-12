@@ -28,9 +28,9 @@ steps:
 
 - script: |
     echo $PWD
-    mkdir -p /FotoManager/obj/desktop/win
+    mkdir -p FotoManager/obj/desktop/win
     echo $PWD
-    cd /FotoManager/obj/desktop/win
+    cd FotoManager/obj/desktop/win
     echo $PWD
     sudo npm install electron-builder --global
     echo $PWD
@@ -40,7 +40,7 @@ steps:
 
 - script: |
     echo $PWD
-    cd /FotoManager
+    cd FotoManager
     echo $PWD
     ls
     electronize build /target win
