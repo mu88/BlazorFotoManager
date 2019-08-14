@@ -37,6 +37,7 @@ steps:
     sudo dpkg --add-architecture i386 
     wget -nc https://dl.winehq.org/wine-builds/winehq.key
     sudo apt-key add winehq.key
+    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
   displayName: 'Install Wine for electron-builder'
 
 - script: |
