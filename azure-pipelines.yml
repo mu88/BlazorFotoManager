@@ -34,10 +34,12 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: 'Tests\Tests.csproj'
+    projects: 'Tests/Tests.csproj'
     codeCoverageEnabled: True
   displayName: 'Run tests'
 
-- publish: $(System.DefaultWorkingDirectory)/**/*.exe
-  artifact: App
-  displayName: "Publish build artifact"
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifact: App
+    patterns: "*.exe"
+    path: $(System.DefaultWorkingDirectory)/FotoManager/bin/Desktop
