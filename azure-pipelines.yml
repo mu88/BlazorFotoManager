@@ -35,8 +35,9 @@ steps:
   inputs:
     command: 'test'
     projects: 'Tests\Tests.csproj'
-    testRunTitle: 'Run tests'
+    codeCoverageEnabled: True
+  displayName: 'Run tests'
 
-- publish: $(System.DefaultWorkingDirectory)/FotoManager/bin/Desktop/*.exe
+- publish: $(System.DefaultWorkingDirectory)/**/*.exe
   artifact: App
   displayName: "Publish build artifact"
