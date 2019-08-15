@@ -35,11 +35,10 @@ steps:
   inputs:
     command: 'test'
     projects: 'Tests/Tests.csproj'
-    codeCoverageEnabled: True
   displayName: 'Run tests'
 
-- task: DownloadPipelineArtifact@2
+- task: PublishPipelineArtifact@1
   inputs:
     artifact: App
-    patterns: "*.exe"
-    path: $(System.DefaultWorkingDirectory)/FotoManager/bin/Desktop
+    path: $(System.DefaultWorkingDirectory)/FotoManager/bin/Desktop/*.exe
+  displayName: 'Publish build artifact'
