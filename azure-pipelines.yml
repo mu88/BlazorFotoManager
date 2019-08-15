@@ -39,6 +39,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: FotoManager/bin/Desktop/*.exe
+    pathtoPublish: FotoManager/bin/Desktop
     artifactName: 'App'
   displayName: 'Publish build artifact'
