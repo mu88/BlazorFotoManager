@@ -31,6 +31,12 @@ steps:
     electronize build /target win
   displayName: 'Build Windows app with ElectronNET'
 
-- publish: FotoManager\bin\Desktop\*.exe
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'Tests\Tests.csproj'
+    testRunTitle: 'Run tests'
+
+- publish: $(System.DefaultWorkingDirectory)/FotoManager/bin/Desktop/*.exe
   artifact: App
   displayName: "Publish build artifact"
