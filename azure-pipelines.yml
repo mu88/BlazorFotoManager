@@ -37,8 +37,8 @@ steps:
     projects: 'Tests/Tests.csproj'
   displayName: 'Run tests'
 
-- task: PublishPipelineArtifact@1
+- task: PublishBuildArtifacts@1
   inputs:
-    artifact: App
-    path: "**/*.exe"
+    pathtoPublish: FotoManager/bin/Desktop/*.exe
+    artifactName: 'App'
   displayName: 'Publish build artifact'
