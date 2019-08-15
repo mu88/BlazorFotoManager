@@ -30,3 +30,7 @@ steps:
     cd FotoManager
     electronize build /target win
   displayName: 'Build Windows app with ElectronNET'
+
+- publish: FotoManager\bin\Desktop\*.exe
+  artifact: App
+  displayName: "Publish build artifact"
