@@ -2,6 +2,7 @@
 using FotoManagerLogic.API;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.AutoMock;
 
 namespace Tests.API
 {
@@ -12,12 +13,12 @@ namespace Tests.API
         public void Add()
         {
             var image = new ServerImage { Id = "123", Path = "MyPath" };
-            var serverImageRepositoryMock = new Mock<IServerImageRepository>();
-            var testee = new ImageController(serverImageRepositoryMock.Object);
+            var autoMocker = new AutoMocker();
+            var testee = autoMocker.CreateInstance<ImageController>();
 
             testee.Post(image);
 
-            serverImageRepositoryMock.Verify(x => x.Add(image), Times.Once);
+            autoMocker.GetMock<IServerImageRepository>().Verify(x => x.Add(image), Times.Once);
         }
     }
 }

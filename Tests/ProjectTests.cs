@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -9,6 +10,7 @@ using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.AutoMock;
 using RichardSzalay.MockHttp;
 using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
@@ -28,9 +30,9 @@ namespace Tests
                 imageFilePaths.Add($"Image {i}");
             }
 
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var testee = new Project(new Mock<IFileHandler>().Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object);
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
             await testee.AddImagesAsync(imageFilePaths);
 
             for (var i = 0; i < numberOfNextCalls; i++)
@@ -53,9 +55,9 @@ namespace Tests
                 imageFilePaths.Add($"Image {i}");
             }
 
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var testee = new Project(new Mock<IFileHandler>().Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object);
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
             await testee.AddImagesAsync(imageFilePaths);
             for (var i = 0; i < numberOfImages; i++)
             {
@@ -73,35 +75,34 @@ namespace Tests
         [TestMethod]
         public async Task AddImages()
         {
-            var mockHttp = new MockHttpMessageHandler();
-            mockHttp.Expect(HttpMethod.Post, "/api/images");
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(mockHttp.ToHttpClient());
-            var testee = new Project(new Mock<IFileHandler>().Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object);
+            var autoMocker = new AutoMocker();
+            var httpMock = new MockHttpMessageHandler();
+            var mockedRequest = httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
+            var testee = autoMocker.CreateInstance<Project>();
 
             await testee.AddImagesAsync(imageFilePaths);
 
             testee.NumberOfImages.Should().Be(2);
-            mockHttp.VerifyNoOutstandingExpectation();
+            httpMock.GetMatchCount(mockedRequest).Should().Be(2);
         }
 
         [TestMethod]
-        public async void Export()
+        public async Task Export()
         {
             var imageFilePaths = new Collection<string> { @"D:\input\Path1.jpg", @"D:\input\Path2.jpg" };
             var exportPath = @"C:\temp";
             var progressActionMock = new Mock<Action<double>>();
-            var fileSystemMock = new Mock<IFileSystem>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var testee = new Project(new Mock<IFileHandler>().Object, fileSystemMock.Object, httpClientFactoryMock.Object);
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
             await testee.AddImagesAsync(imageFilePaths);
             testee.CurrentImage.Increase();
 
             testee.ExportImages(exportPath, progressActionMock.Object);
 
-            fileSystemMock.Verify(x => x.Copy(@"D:\input\Path1.jpg", @"C:\temp\Path1_0.jpg", true), Times.Once);
+            autoMocker.GetMock<IFileSystem>().Verify(x => x.Copy(@"D:\input\Path1.jpg", @"C:\temp\Path1_0.jpg", true), Times.Once);
             progressActionMock.Verify(x => x.Invoke(1), Times.Once);
         }
 
@@ -109,14 +110,10 @@ namespace Tests
         public async Task GetCurrentImageUrl()
         {
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };
-            var projectPath = "MyPath";
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var testee =
-                new Project(new Mock<IFileHandler>().Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object)
-                {
-                    ProjectPath = projectPath
-                };
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
+            testee.ProjectPath = "MyPath";
             await testee.AddImagesAsync(imageFilePaths);
 
             var result = testee.GetCurrentImageUrl();
@@ -128,15 +125,14 @@ namespace Tests
         public async Task Load()
         {
             var projectFilePath = "MyProjectPath";
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var fileHandlerMock = new Mock<IFileHandler>();
-            fileHandlerMock.Setup(x => x.ReadAsync<ProjectDto>(projectFilePath))
-                           .ReturnsAsync(new ProjectDto
-                                         {
-                                             CurrentImageIndex = 1, Images = new Collection<ImageDto> { new ImageDto(), new ImageDto() }
-                                         });
-            var testee = new Project(fileHandlerMock.Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object);
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IFileHandler, Task<ProjectDto>>(x => x.ReadAsync<ProjectDto>(projectFilePath))
+                      .ReturnsAsync(new ProjectDto
+                                    {
+                                        CurrentImageIndex = 1, Images = new Collection<ImageDto> { new ImageDto(), new ImageDto() }
+                                    });
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
 
             await testee.LoadAsync(projectFilePath);
 
@@ -149,19 +145,16 @@ namespace Tests
         {
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };
             var projectPath = "MyPath";
-            var fileHandlerMock = new Mock<IFileHandler>();
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
-            var testee =
-                new Project(fileHandlerMock.Object, new Mock<IFileSystem>().Object, httpClientFactoryMock.Object)
-                {
-                    ProjectPath = projectPath
-                };
+            var autoMocker = new AutoMocker();
+            autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+            var testee = autoMocker.CreateInstance<Project>();
+            testee.ProjectPath = projectPath;
             await testee.AddImagesAsync(imageFilePaths);
 
             await testee.SaveAsync();
 
-            fileHandlerMock.Verify(x => x.WriteAsync(It.Is<ProjectDto>(d => d.Images.Count() == 2), projectPath), Times.Once);
+            autoMocker.GetMock<IFileHandler>()
+                      .Verify(x => x.WriteAsync(It.Is<ProjectDto>(d => d.Images.Count() == 2), projectPath), Times.Once);
         }
     }
 }
