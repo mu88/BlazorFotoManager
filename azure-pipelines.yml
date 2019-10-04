@@ -35,8 +35,10 @@ steps:
   inputs:
     command: 'test'
     projects: 'Tests/Tests.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
     publishTestResults: true
+  displayName: 'Run tests'
+
 - task: reportgenerator@4
   inputs:
     reports: '**/coverage.cobertura.xml'
