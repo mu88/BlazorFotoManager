@@ -43,6 +43,7 @@ steps:
   inputs:
     reports: '**/coverage.cobertura.xml'
     targetdir: 'CoverageReport'
+    reporttypes: 'HtmlInline_AzurePipelines_Dark;Badges'
   displayName: 'Refactor coverage report'
 
 - task: PublishCodeCoverageResults@1
