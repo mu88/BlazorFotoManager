@@ -10,10 +10,10 @@ namespace FotoManager
     public class ProjectService : IProjectService
     {
         /// <inheritdoc />
-        public ProjectService(IFileHandler fileHandler, IFileSystem fileSystem)
+        public ProjectService(IFileHandler fileHandler, IFileSystem fileSystem, IHttpClientFactory httpClientFactory)
         {
             FileHandler = fileHandler;
-            CurrentProject = new Project(FileHandler, fileSystem);
+            CurrentProject = new Project(FileHandler, fileSystem, httpClientFactory);
             ExportStatus = ExportStatus.NotExporting;
         }
 
@@ -61,7 +61,7 @@ namespace FotoManager
 
             if (imageFilePaths != null && imageFilePaths.Any())
             {
-                CurrentProject.AddImages(imageFilePaths);
+                await CurrentProject.AddImagesAsync(imageFilePaths);
             }
         }
 
@@ -106,7 +106,7 @@ namespace FotoManager
 
                 // this is really not nice, but otherwise,
                 // the UI won't be refreshed and no status message is displayed.
-                browserWindow.Reload(); 
+                browserWindow.Reload();
 
                 CurrentProject.ExportImages(exportPath, browserWindow.SetProgressBar);
 
@@ -115,7 +115,7 @@ namespace FotoManager
 
                 // this is really not nice, but otherwise,
                 // the UI won't be refreshed and no status message is displayed.
-                browserWindow.Reload(); 
+                browserWindow.Reload();
             }
         }
     }

@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
+using FotoManagerLogic.API;
+using FotoManagerLogic.Business;
 using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +32,8 @@ namespace FotoManager
             services.AddSingleton<IProjectService, ProjectService>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.AddSingleton<IFileHandler, JsonFileHandler>();
+            services.AddSingleton<IServerImageRepository, ServerImageRepository>();
+            services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +56,7 @@ namespace FotoManager
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapControllers();
             });
 
             Task.Run(async () =>

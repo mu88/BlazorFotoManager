@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MetadataExtractor;
 
 namespace FotoManagerLogic.Business
@@ -10,7 +11,10 @@ namespace FotoManagerLogic.Business
         {
             Path = path;
             NumberOfCopies = numberOfCopies;
+            Id = Guid.NewGuid().ToString();
         }
+
+        public string Id { get; }
 
         /// <inheritdoc />
         public string Path { get; }

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using FotoManagerLogic.API;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
 
@@ -11,12 +15,15 @@ namespace FotoManagerLogic.Business
 {
     public class Project : IProject
     {
+        private const string ApiEndpoint = "http://localhost:8001/api/images";
+
         /// <inheritdoc />
-        public Project(IFileHandler fileHandler, IFileSystem fileSystem)
+        public Project(IFileHandler fileHandler, IFileSystem fileSystem, IHttpClientFactory httpClientFactory)
         {
             FileHandler = fileHandler;
             FileSystem = fileSystem;
 
+            HttpClient = httpClientFactory.CreateClient();
             Images = new Collection<IImage>();
             CurrentImageIndex = 0;
             ProjectPath = string.Empty;
@@ -43,11 +50,13 @@ namespace FotoManagerLogic.Business
 
         private IFileSystem FileSystem { get; }
 
+        private HttpClient HttpClient { get; }
+
         /// <inheritdoc />
-        public async Task SaveAsync()
+        public Task SaveAsync()
         {
             var projectDto = GetProjectDto();
-            await FileHandler.WriteAsync(projectDto, ProjectPath);
+            return FileHandler.WriteAsync(projectDto, ProjectPath);
         }
 
         /// <inheritdoc />
@@ -98,12 +107,25 @@ namespace FotoManagerLogic.Business
         }
 
         /// <inheritdoc />
-        public void AddImages(IEnumerable<string> imageFilePaths)
+        public async Task AddImagesAsync(IEnumerable<string> imageFilePaths)
         {
+            // TODO mu88: Add status indicator
+
             foreach (var imageFilePath in imageFilePaths)
             {
-                Images.Add(new Image(imageFilePath));
+                var image = new Image(imageFilePath);
+
+                Images.Add(image);
+                await HttpClient.PostAsync(ApiEndpoint,
+                                           new StringContent(JsonSerializer.Serialize(new ServerImage { Id = image.Id, Path = image.Path }),
+                                                             Encoding.UTF8,
+                                                             "application/json"));
             }
+        }
+
+        public string GetCurrentImageUrl()
+        {
+            return $"{ApiEndpoint}/{CurrentImage.Id}";
         }
 
         private ProjectDto GetProjectDto()

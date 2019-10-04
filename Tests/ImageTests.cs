@@ -28,5 +28,13 @@ namespace Tests
 
             testee.NumberOfCopies.Should().Be(3);
         }
+
+        [TestMethod]
+        public void HasId()
+        {
+            var testee = new Image(@"C:\temp\myImage.png", 2);
+
+            testee.Id.Should().NotBeNullOrWhiteSpace();
+        }
     }
 }

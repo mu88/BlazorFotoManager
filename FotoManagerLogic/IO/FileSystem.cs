@@ -6,15 +6,15 @@ namespace FotoManagerLogic.IO
     public class FileSystem : IFileSystem
     {
         /// <inheritdoc />
-        public async Task WriteAllTextAsync(string path, string contents)
+        public Task WriteAllTextAsync(string path, string contents)
         {
-            await File.WriteAllTextAsync(path, contents);
+            return File.WriteAllTextAsync(path, contents);
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadAllTextAsync(string path)
+        public Task<string> ReadAllTextAsync(string path)
         {
-            return await File.ReadAllTextAsync(path);
+            return File.ReadAllTextAsync(path);
         }
 
         /// <inheritdoc />

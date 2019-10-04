@@ -10,6 +10,8 @@
 
         string Orientation { get; }
 
+        string Id { get; }
+
         void Increase();
 
         void Decrease();

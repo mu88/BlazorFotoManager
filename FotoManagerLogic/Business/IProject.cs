@@ -26,6 +26,8 @@ namespace FotoManagerLogic.Business
 
         Task LoadAsync(string projectFilePath);
 
-        void AddImages(IEnumerable<string> imageFilePaths);
+        Task AddImagesAsync(IEnumerable<string> imageFilePaths);
+
+        string GetCurrentImageUrl();
     }
 }
