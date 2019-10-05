@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- release
 
 pool:
   vmImage: 'windows-latest'
@@ -58,3 +59,18 @@ steps:
     pathtoPublish: FotoManager/bin/Desktop
     artifactName: 'App'
   displayName: 'Publish build artifact'
+
+- task: PublishGitHubRelease@0
+  inputs:
+    applicationName: 'BlazorFotoManager'
+    gitSourceOption: 'github'
+    token: '$(GitHubPAT)'
+    repo: 'BlazorFotoManager'
+    owner: 'mu88'
+    tagName: 'v$(build.buildNumber)'
+    releaseName: 'v$(build.buildNumber)'
+    draft: false
+    prerelease: false
+    assetsPattern: '$(Build.ArtifactStagingDirectory)\**\*.exe'
+  displayName: 'Create GitHub release'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
