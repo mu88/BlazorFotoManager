@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace FotoManagerLogic.IO
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class FileSystem : IFileSystem
     {
         /// <inheritdoc />

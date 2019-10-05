@@ -35,7 +35,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'Tests/Tests.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[FotoManager]FotoManager.Pages.*"'
     publishTestResults: true
   displayName: 'Run tests'
 
@@ -43,8 +43,7 @@ steps:
   inputs:
     reports: '**/coverage.cobertura.xml'
     targetdir: 'CoverageReport'
-    reporttypes: 'HtmlInline_AzurePipelines_Dark;Badges'
-    classfilters: '-FotoManager.Pages.*;-FotoManager.Startup;-FotoManager.Program;-FotoManagerLogic.IO.FileSystem'
+    reporttypes: 'HtmlInline_AzurePipelines_Dark'
   displayName: 'Refactor coverage report'
 
 - task: PublishCodeCoverageResults@1

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FotoManager
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
