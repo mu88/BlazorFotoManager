@@ -148,3 +148,14 @@ app {
         display: block;
     }
 }
+
+img {
+    height: calc(100vh - 250px);
+    width: 100%;
+    /* This is just to remove a blank space at the bottom of the image */
+    display: block;
+}
+
+img.contain {
+    object-fit: contain;
+}
