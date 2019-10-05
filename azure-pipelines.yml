@@ -54,9 +54,14 @@ steps:
     reportDirectory: 'CoverageReport'
   displayName: 'Publish code coverage results'
 
+- script: |
+    mkdir FotoManager/Release
+    copy FotoManager/bin/Desktop/FotoFlipper*.exe FotoManager/Release
+  displayName: 'Copy packed executable to separate location'
+
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: FotoManager/bin/Desktop
+    pathtoPublish: FotoManager/Release
     artifactName: 'App'
   displayName: 'Publish build artifact'
 
