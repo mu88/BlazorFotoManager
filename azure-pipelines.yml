@@ -44,6 +44,7 @@ steps:
     reports: '**/coverage.cobertura.xml'
     targetdir: 'CoverageReport'
     reporttypes: 'HtmlInline_AzurePipelines_Dark;Badges'
+    classfilters: '-FotoManager.Pages.*;-FotoManager.Startup;-FotoManager.Program;-FotoManagerLogic.IO.FileSystem'
   displayName: 'Refactor coverage report'
 
 - task: PublishCodeCoverageResults@1
