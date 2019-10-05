@@ -76,6 +76,6 @@ steps:
     releaseName: 'v$(build.buildNumber)'
     draft: false
     prerelease: false
-    assetsPattern: 'FotoManager/Release/*.exe'
+    assetsPattern: '$(Build.SourcesDirectory)/FotoManager/Release/*'
   displayName: 'Create GitHub release'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
