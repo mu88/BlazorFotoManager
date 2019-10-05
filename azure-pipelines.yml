@@ -35,7 +35,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'Tests/Tests.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[FotoManager]FotoManager.Pages.*"'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[*]FotoManager.Pages.*,[*]FotoManager.Startup"'
     publishTestResults: true
   displayName: 'Run tests'
 
