@@ -10,9 +10,13 @@ namespace FotoManager
     public class ProjectService : IProjectService
     {
         /// <inheritdoc />
-        public ProjectService(IFileHandler fileHandler, IFileSystem fileSystem, IHttpClientFactory httpClientFactory)
+        public ProjectService(IFileHandler fileHandler,
+                              IFileSystem fileSystem,
+                              IHttpClientFactory httpClientFactory,
+                              IElectronHelper electronHelper)
         {
             FileHandler = fileHandler;
+            ElectronHelper = electronHelper;
             CurrentProject = new Project(FileHandler, fileSystem, httpClientFactory);
             ExportStatus = ExportStatus.NotExporting;
         }
@@ -25,6 +29,8 @@ namespace FotoManager
 
         private IFileHandler FileHandler { get; }
 
+        private IElectronHelper ElectronHelper { get; }
+
         /// <inheritdoc />
         public async Task LoadProjectAsync()
         {
@@ -35,14 +41,11 @@ namespace FotoManager
                                         Filters = new[] { new FileFilter { Extensions = new[] { "json" }, Name = "Projektdatei" } }
                                     };
 
-            // When using async/await, Blazor will not refresh the UI.
-            var projectFilePath =
-                (await Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions))
+            var projectFilePath = (await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions))
                 .FirstOrDefault();
 
             if (!string.IsNullOrWhiteSpace(projectFilePath))
             {
-                // When using async/await, Blazor will not refresh the UI.
                 await CurrentProject.LoadAsync(projectFilePath);
             }
         }
@@ -56,8 +59,7 @@ namespace FotoManager
                                         Properties = new[] { OpenDialogProperty.openFile, OpenDialogProperty.multiSelections },
                                         Filters = new[] { new FileFilter { Extensions = new[] { "jpg", "png", "gif" }, Name = "Bilder" } }
                                     };
-            var imageFilePaths =
-                await Electron.Dialog.ShowOpenDialogAsync(Electron.WindowManager.BrowserWindows.First(), openDialogOptions);
+            var imageFilePaths = await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions);
 
             if (imageFilePaths != null && imageFilePaths.Any())
             {
@@ -75,8 +77,7 @@ namespace FotoManager
                                             Title = "Bitte wählen Sie den Speicherort der Projektdatei aus",
                                             Filters = new[] { new FileFilter { Extensions = new[] { "json" }, Name = "Projektdatei" } }
                                         };
-                var saveFilePath =
-                    await Electron.Dialog.ShowSaveDialogAsync(Electron.WindowManager.BrowserWindows.First(), saveDialogOptions);
+                var saveFilePath = await ElectronHelper.ShowSaveDialogAsync(ElectronHelper.GetBrowserWindow(), saveDialogOptions);
 
                 if (string.IsNullOrWhiteSpace(saveFilePath))
                 {
@@ -97,8 +98,8 @@ namespace FotoManager
                                         Title = "Bitte wählen Sie den Speicherort aus",
                                         Properties = new[] { OpenDialogProperty.openDirectory }
                                     };
-            var browserWindow = Electron.WindowManager.BrowserWindows.First();
-            var exportPath = (await Electron.Dialog.ShowOpenDialogAsync(browserWindow, openDialogOptions)).FirstOrDefault();
+            var exportPath =
+                (await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions)).FirstOrDefault();
 
             if (!string.IsNullOrWhiteSpace(exportPath))
             {
@@ -106,16 +107,16 @@ namespace FotoManager
 
                 // this is really not nice, but otherwise,
                 // the UI won't be refreshed and no status message is displayed.
-                browserWindow.Reload();
+                ElectronHelper.ReloadBrowserWindow();
 
-                CurrentProject.ExportImages(exportPath, browserWindow.SetProgressBar);
+                CurrentProject.ExportImages(exportPath, i => ElectronHelper.SetProgressBar(i));
 
                 ExportStatus = ExportStatus.ExportSuccessful;
-                browserWindow.SetProgressBar(-1); // remove progress bar
+                ElectronHelper.SetProgressBar(-1); // remove progress bar
 
                 // this is really not nice, but otherwise,
                 // the UI won't be refreshed and no status message is displayed.
-                browserWindow.Reload();
+                ElectronHelper.ReloadBrowserWindow();
             }
         }
     }

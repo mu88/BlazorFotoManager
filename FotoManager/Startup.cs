@@ -34,6 +34,7 @@ namespace FotoManager
             services.AddSingleton<IFileHandler, JsonFileHandler>();
             services.AddSingleton<IServerImageRepository, ServerImageRepository>();
             services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
+            services.AddSingleton<IElectronHelper, ElectronHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

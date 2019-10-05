@@ -102,7 +102,7 @@ namespace FotoManagerLogic.Business
             CurrentImageIndex = projectDto.CurrentImageIndex;
             foreach (var imageDto in projectDto.Images)
             {
-                Images.Add(new Image(imageDto.Path, imageDto.NumberOfCopies));
+                await AddImageAsync(new Image(imageDto.Path, imageDto.NumberOfCopies));
             }
         }
 
@@ -113,19 +113,22 @@ namespace FotoManagerLogic.Business
 
             foreach (var imageFilePath in imageFilePaths)
             {
-                var image = new Image(imageFilePath);
-
-                Images.Add(image);
-                await HttpClient.PostAsync(ApiEndpoint,
-                                           new StringContent(JsonSerializer.Serialize(new ServerImage { Id = image.Id, Path = image.Path }),
-                                                             Encoding.UTF8,
-                                                             "application/json"));
+                await AddImageAsync(new Image(imageFilePath));
             }
         }
 
         public string GetCurrentImageUrl()
         {
             return $"{ApiEndpoint}/{CurrentImage.Id}";
+        }
+
+        private async Task AddImageAsync(Image image)
+        {
+            Images.Add(image);
+            await HttpClient.PostAsync(ApiEndpoint,
+                                       new StringContent(JsonSerializer.Serialize(new ServerImage { Id = image.Id, Path = image.Path }),
+                                                         Encoding.UTF8,
+                                                         "application/json"));
         }
 
         private ProjectDto GetProjectDto()
