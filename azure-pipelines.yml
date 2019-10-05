@@ -55,8 +55,8 @@ steps:
   displayName: 'Publish code coverage results'
 
 - script: |
-    mkdir FotoManager/Release
-    copy FotoManager/bin/Desktop/FotoFlipper*.exe FotoManager/Release
+    mkdir FotoManager\Release
+    copy FotoManager\bin\Desktop\FotoFlipper*.exe FotoManager\Release
   displayName: 'Copy packed executable to separate location'
 
 - task: PublishBuildArtifacts@1
