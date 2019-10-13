@@ -1,20 +1,21 @@
 ﻿@page "/"
 @using FotoManagerLogic.Business
 @inject IProjectService ProjectService
+@inject ITranslator Translator
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="btn-group mr-2" role="group" aria-label="Second group">
         <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.LoadImagesAsync())">
             <span class="fa fa-plus-square fa-sm"></span>
             <br>
-            <span class="small">Bilder laden</span>
+            <span class="small">@Translator.Translate("Load Images")</span>
         </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="First group">
         <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.LoadProjectAsync())">
             <span class="fa fa-folder-open fa-sm"></span>
             <br>
-            <span class="small">Projekt öffnen</span>
+            <span class="small">@Translator.Translate("Open Project")</span>
         </button>
     </div>
     @if (ProjectService.CurrentProject.NumberOfImages > 0)
@@ -23,7 +24,7 @@
             <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.SaveProjectAsync())">
                 <span class="fa fa-save fa-sm"></span>
                 <br>
-                <span class="small">Projekt speichern</span>
+                <span class="small">@Translator.Translate("Save Project")</span>
             </button>
         </div>
     }
@@ -33,7 +34,7 @@
             <button type="button" class="btn btn-secondary" @onclick="@(async () => await ProjectService.ExportAsync())">
                 <span class="fa fa-clone fa-sm"></span>
                 <br>
-                <span class="small">Bilder exportieren</span>
+                <span class="small">@Translator.Translate("Export Images")</span>
             </button>
         </div>
     }
@@ -44,13 +45,13 @@
         <div class="col">
             @if (ProjectService.ExportStatus == ExportStatus.ExportSuccessful)
             {
-                <div class="alert alert-success" role="alert">Export erfolgreich abgeschlossen!</div>
+            <div class="alert alert-success" role="alert">@Translator.Translate("Export successfully finished")!</div>
             }
             else if ((ProjectService.ExportStatus == ExportStatus.Exporting))
             {
                 <div class="alert alert-warning" role="alert">
                     <div class="d-flex align-items-center">
-                        <strong>Exportiere...</strong>
+                        <strong>@Translator.Translate("Exporting")...</strong>
                         <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
                     </div>
                 </div>
@@ -63,24 +64,24 @@
             <div class="col">
                 <div class="card bg-light mb-3">
                     <div class="card-body">
-                        <h5 class="card-title text-dark">Aktuelles Bild (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
+                        <h5 class="card-title text-dark">@Translator.Translate("Current Image") (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button type="button" class="btn btn-link" title="1 Bild zurück" @onclick="@ProjectService.CurrentProject.PreviousImage">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Image backward")" @onclick="@ProjectService.CurrentProject.PreviousImage">
                                 <span class="fa fa-chevron-circle-left fa-lg text-dark"></span>
                             </button>
-                            <button type="button" class="btn btn-link" title="1 Bild vorwärts" @onclick="@ProjectService.CurrentProject.NextImage">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Image forward")" @onclick="@ProjectService.CurrentProject.NextImage">
                                 <span class="fa fa-chevron-circle-right fa-lg text-dark"></span>
                             </button>
-                            Bild @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
+                            @Translator.Translate("Image") @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button type="button" class="btn btn-link" title="1 Kopie entfernen" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy less")" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
                             </button>
-                            <button type="button" class="btn btn-link" title="1 Kopie hinzufügen" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy more")" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
                                 <span class="fa fa-plus-circle fa-lg text-dark"></span>
                             </button>
-                            Anzahl Kopien: @ProjectService.CurrentProject.CurrentImage.NumberOfCopies
+                            @Translator.Translate("Number of Copies"): @ProjectService.CurrentProject.CurrentImage.NumberOfCopies
                         </p>
                     </div>
                 </div>
@@ -88,9 +89,9 @@
             <div class="col">
                 <div class="card bg-light mb-3">
                     <div class="card-body">
-                        <h5 class="card-title text-dark">Übersicht</h5>
-                        <p class="card-text text-dark" style="height: 1rem;">Geladene Bilder: @ProjectService.CurrentProject.NumberOfImages</p>
-                        <p class="card-text text-dark" style="height: 1rem;">Kopien insgesamt: @ProjectService.CurrentProject.SumOfCopies</p>
+                        <h5 class="card-title text-dark">@Translator.Translate("Overview")</h5>
+                        <p class="card-text text-dark" style="height: 1rem;">@Translator.Translate("Loaded Images"): @ProjectService.CurrentProject.NumberOfImages</p>
+                        <p class="card-text text-dark" style="height: 1rem;">@Translator.Translate("Copies overall"): @ProjectService.CurrentProject.SumOfCopies</p>
                     </div>
                 </div>
             </div>

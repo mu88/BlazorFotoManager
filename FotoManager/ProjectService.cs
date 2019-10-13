@@ -13,10 +13,12 @@ namespace FotoManager
         public ProjectService(IFileHandler fileHandler,
                               IFileSystem fileSystem,
                               IHttpClientFactory httpClientFactory,
-                              IElectronHelper electronHelper)
+                              IElectronHelper electronHelper,
+                              ITranslator translator)
         {
             FileHandler = fileHandler;
             ElectronHelper = electronHelper;
+            Translator = translator;
             CurrentProject = new Project(FileHandler, fileSystem, httpClientFactory);
             ExportStatus = ExportStatus.NotExporting;
         }
@@ -31,14 +33,22 @@ namespace FotoManager
 
         private IElectronHelper ElectronHelper { get; }
 
+        private ITranslator Translator { get; }
+
         /// <inheritdoc />
         public async Task LoadProjectAsync()
         {
             var openDialogOptions = new OpenDialogOptions
                                     {
-                                        Title = "Bitte wählen Sie Ihre Projektdatei aus",
+                                        Title = Translator.Translate("Please choose your Project File"),
                                         Properties = new[] { OpenDialogProperty.openFile },
-                                        Filters = new[] { new FileFilter { Extensions = new[] { "json" }, Name = "Projektdatei" } }
+                                        Filters = new[]
+                                                  {
+                                                      new FileFilter
+                                                      {
+                                                          Extensions = new[] { "json" }, Name = Translator.Translate("Project File")
+                                                      }
+                                                  }
                                     };
 
             var projectFilePath = (await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions))
@@ -55,9 +65,15 @@ namespace FotoManager
         {
             var openDialogOptions = new OpenDialogOptions
                                     {
-                                        Title = "Bitte wählen Sie Ihre Bilder aus",
+                                        Title = Translator.Translate("Please choose your Images"),
                                         Properties = new[] { OpenDialogProperty.openFile, OpenDialogProperty.multiSelections },
-                                        Filters = new[] { new FileFilter { Extensions = new[] { "jpg", "png", "gif" }, Name = "Bilder" } }
+                                        Filters = new[]
+                                                  {
+                                                      new FileFilter
+                                                      {
+                                                          Extensions = new[] { "jpg", "png", "gif" }, Name = Translator.Translate("Images")
+                                                      }
+                                                  }
                                     };
             var imageFilePaths = await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions);
 
@@ -74,8 +90,14 @@ namespace FotoManager
             {
                 var saveDialogOptions = new SaveDialogOptions
                                         {
-                                            Title = "Bitte wählen Sie den Speicherort der Projektdatei aus",
-                                            Filters = new[] { new FileFilter { Extensions = new[] { "json" }, Name = "Projektdatei" } }
+                                            Title = Translator.Translate("Please choose where to save your Project File"),
+                                            Filters = new[]
+                                                      {
+                                                          new FileFilter
+                                                          {
+                                                              Extensions = new[] { "json" }, Name = Translator.Translate("Project File")
+                                                          }
+                                                      }
                                         };
                 var saveFilePath = await ElectronHelper.ShowSaveDialogAsync(ElectronHelper.GetBrowserWindow(), saveDialogOptions);
 
@@ -95,7 +117,7 @@ namespace FotoManager
         {
             var openDialogOptions = new OpenDialogOptions
                                     {
-                                        Title = "Bitte wählen Sie den Speicherort aus",
+                                        Title = Translator.Translate("Please choose the Export location"),
                                         Properties = new[] { OpenDialogProperty.openDirectory }
                                     };
             var exportPath =

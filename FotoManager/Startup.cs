@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using FotoManagerLogic.Business;
 using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,12 +31,14 @@ namespace FotoManager
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddSingleton<IProjectService, ProjectService>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.AddSingleton<IFileHandler, JsonFileHandler>();
             services.AddSingleton<IServerImageRepository, ServerImageRepository>();
             services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
             services.AddSingleton<IElectronHelper, ElectronHelper>();
+            services.AddSingleton<ITranslator, Translator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +52,13 @@ namespace FotoManager
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+                                       {
+                                           DefaultRequestCulture = new RequestCulture("de"),
+                                           SupportedCultures = new[] { new CultureInfo("de") },
+                                           SupportedUICultures = new[] { new CultureInfo("de") }
+                                       });
 
             app.UseStaticFiles();
 
