@@ -23,6 +23,11 @@ namespace FotoManager.API
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                throw new PlatformNotSupportedException();
+            }
+                
             var originalImage = Image.FromFile(ServerImageRepository.GetPath(id));
             ExifRotate(originalImage);
             var newImage = new Bitmap(originalImage);
@@ -40,13 +45,18 @@ namespace FotoManager.API
 
         private void ExifRotate(Image image)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                throw new PlatformNotSupportedException();
+            }
+            
             if (!image.PropertyIdList.Contains(ExifOrientationId))
             {
                 return;
             }
 
             var exifProperty = image.GetPropertyItem(ExifOrientationId);
-            int exifValue = BitConverter.ToUInt16(exifProperty.Value, 0);
+            int exifValue = BitConverter.ToUInt16(exifProperty?.Value ?? throw new NullReferenceException(), 0);
 
             var rotation = exifValue switch
             {
