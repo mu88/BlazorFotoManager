@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using ElectronNET.API;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace FotoManager
 {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)
