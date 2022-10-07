@@ -22,21 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore FotoManager.sln
     - name: Test
-      run: dotnet test --no-build FotoManager.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[*]FotoManager.Pages.*%2c[*]FotoManager.Startup"
-    - name: ReportGenerator
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.10
-      with:
-        reports: 'Tests\coverage.cobertura.xml'
-        targetdir: 'coveragereport'
-        reporttypes: 'Badges'
-        verbosity: 'Info'
-        tag: '${{ github.ref_name }}'
-        toolpath: 'reportgeneratortool'
-    - name: Upload coverage report artifact
-      uses: actions/upload-artifact@v3.1.0
-      with:
-        name: CoverageReport       
-        path: coveragereport\badge_combined.svg
+      run: dotnet test --no-build FotoManager.sln
     - name: Build Windows app with ElectronNET
       run: |
         cd FotoManager
