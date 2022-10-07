@@ -2,13 +2,13 @@ name: Release
 
 on:
   push:
-    branches: [ release ]
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - '*' # Push events to matching everything, e. g. "v1" or "2021.2.2.1"
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -30,7 +30,7 @@ jobs:
         targetdir: 'coveragereport'
         reporttypes: 'Badges'
         verbosity: 'Info'
-        tag: '${{ github.run_number }}_${{ github.run_id }}'
+        tag: '${{ github.ref_name }}'
         toolpath: 'reportgeneratortool'
     - name: Upload coverage report artifact
       uses: actions/upload-artifact@v3.1.0
@@ -49,4 +49,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: FotoManager\Release\*
-        tag_name: v${{ github.run_number }}
+        tag_name: ${{ github.ref_name }}
