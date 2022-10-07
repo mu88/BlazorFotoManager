@@ -1,17 +1,16 @@
-﻿namespace FotoManagerLogic.Business
+﻿namespace FotoManagerLogic.Business;
+
+public interface IImage
 {
-    public interface IImage
-    {
-        string Path { get; }
+    string Path { get; }
 
-        int NumberOfCopies { get; }
+    int NumberOfCopies { get; }
 
-        string FileName { get; }
+    string FileName { get; }
 
-        string Id { get; }
+    string Id { get; }
 
-        void Increase();
+    void Increase();
 
-        void Decrease();
-    }
+    void Decrease();
 }

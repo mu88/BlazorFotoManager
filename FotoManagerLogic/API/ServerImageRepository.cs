@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FotoManagerLogic.API
+namespace FotoManagerLogic.API;
+
+public class ServerImageRepository : IServerImageRepository
 {
-    public class ServerImageRepository : IServerImageRepository
+    /// <inheritdoc />
+    public ServerImageRepository()
     {
-        /// <inheritdoc />
-        public ServerImageRepository()
-        {
-            Content = new List<ServerImage>();
-        }
+        Content = new List<ServerImage>();
+    }
 
-        private List<ServerImage> Content { get; }
+    private List<ServerImage> Content { get; }
 
-        /// <inheritdoc />
-        public void Add(ServerImage entry)
-        {
-            Content.Add(entry);
-        }
+    /// <inheritdoc />
+    public void Add(ServerImage entry)
+    {
+        Content.Add(entry);
+    }
 
-        /// <inheritdoc />
-        public string GetPath(string id)
-        {
-            return Content.First(x => x.Id == id).Path;
-        }
+    /// <inheritdoc />
+    public string GetPath(string id)
+    {
+        return Content.First(x => x.Id == id).Path;
     }
 }

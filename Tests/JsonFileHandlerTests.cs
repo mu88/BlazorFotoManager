@@ -6,33 +6,32 @@ using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests;
+
+public class JsonFileHandlerTests
 {
-    public class JsonFileHandlerTests
+    [Test]
+    public async Task Deserialize()
     {
-        [Test]
-        public async Task Deserialize()
-        {
-            var autoMocker = new AutoMocker();
-            autoMocker.Setup<IFileSystem, Task<string>>(x => x.ReadAllTextAsync("MyFile"))
-                      .ReturnsAsync(@"{""Path"": ""Bla"", ""NumberOfCopies"": 3}");
-            var testee = autoMocker.CreateInstance<JsonFileHandler>();
+        var autoMocker = new AutoMocker();
+        autoMocker.Setup<IFileSystem, Task<string>>(x => x.ReadAllTextAsync("MyFile"))
+            .ReturnsAsync(@"{""Path"": ""Bla"", ""NumberOfCopies"": 3}");
+        var testee = autoMocker.CreateInstance<JsonFileHandler>();
 
-            var result = await testee.ReadAsync<ImageDto>("MyFile");
+        var result = await testee.ReadAsync<ImageDto>("MyFile");
 
-            result.NumberOfCopies.Should().Be(3);
-            result.Path.Should().Be("Bla");
-        }
+        result.NumberOfCopies.Should().Be(3);
+        result.Path.Should().Be("Bla");
+    }
 
-        [Test]
-        public async Task Serialize()
-        {
-            var autoMocker = new AutoMocker();
-            var testee = autoMocker.CreateInstance<JsonFileHandler>();
+    [Test]
+    public async Task Serialize()
+    {
+        var autoMocker = new AutoMocker();
+        var testee = autoMocker.CreateInstance<JsonFileHandler>();
 
-            await testee.WriteAsync(new { Id = 1, Name = "Foo" }, "MyFile");
+        await testee.WriteAsync(new { Id = 1, Name = "Foo" }, "MyFile");
 
-            autoMocker.GetMock<IFileSystem>().Verify(x => x.WriteAllTextAsync("MyFile", It.IsAny<string>()), Times.Once);
-        }
+        autoMocker.GetMock<IFileSystem>().Verify(x => x.WriteAllTextAsync("MyFile", It.IsAny<string>()), Times.Once);
     }
 }

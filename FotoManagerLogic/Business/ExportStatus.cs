@@ -1,9 +1,8 @@
-﻿namespace FotoManagerLogic.Business
+﻿namespace FotoManagerLogic.Business;
+
+public enum ExportStatus
 {
-    public enum ExportStatus
-    {
-        NotExporting,
-        Exporting,
-        ExportSuccessful
-    }
+    NotExporting,
+    Exporting,
+    ExportSuccessful
 }

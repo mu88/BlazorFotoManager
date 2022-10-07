@@ -1,9 +1,8 @@
-namespace FotoManagerLogic.API
-{
-    public interface IServerImageRepository
-    {
-        void Add(ServerImage entry);
+namespace FotoManagerLogic.API;
 
-        string GetPath(string id);
-    }
+public interface IServerImageRepository
+{
+    void Add(ServerImage entry);
+
+    string GetPath(string id);
 }

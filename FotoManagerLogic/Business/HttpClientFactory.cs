@@ -1,13 +1,12 @@
 ﻿using System.Net.Http;
 
-namespace FotoManagerLogic.Business
+namespace FotoManagerLogic.Business;
+
+public class HttpClientFactory : IHttpClientFactory
 {
-    public class HttpClientFactory : IHttpClientFactory
+    /// <inheritdoc />
+    public HttpClient CreateClient()
     {
-        /// <inheritdoc />
-        public HttpClient CreateClient()
-        {
-            return new HttpClient();
-        }
+        return new HttpClient();
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-namespace FotoManagerLogic.IO
+namespace FotoManagerLogic.IO;
+
+public interface IFileSystem
 {
-    public interface IFileSystem
-    {
-        Task WriteAllTextAsync(string path, string contents);
+    Task WriteAllTextAsync(string path, string contents);
 
-        Task<string> ReadAllTextAsync(string path);
+    Task<string> ReadAllTextAsync(string path);
 
-        void Copy(string sourceFileName, string destFileName, bool overwrite);
-    }
+    void Copy(string sourceFileName, string destFileName, bool overwrite);
 }

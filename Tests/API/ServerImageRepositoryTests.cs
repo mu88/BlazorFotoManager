@@ -2,19 +2,18 @@
 using FotoManagerLogic.API;
 using NUnit.Framework;
 
-namespace Tests.API
+namespace Tests.API;
+
+public class ServerImageRepositoryTests
 {
-    public class ServerImageRepositoryTests
+    [Test]
+    public void GetImageContent()
     {
-        [Test]
-        public void GetImageContent()
-        {
-            var testee = new ServerImageRepository();
-            testee.Add(new ServerImage { Id = "123", Path = "MyPath1" });
+        var testee = new ServerImageRepository();
+        testee.Add(new ServerImage { Id = "123", Path = "MyPath1" });
 
-            var result = testee.GetPath("123");
+        var result = testee.GetPath("123");
 
-            result.Should().Be("MyPath1");
-        }
+        result.Should().Be("MyPath1");
     }
 }

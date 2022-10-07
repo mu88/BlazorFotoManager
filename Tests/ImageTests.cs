@@ -2,37 +2,36 @@
 using FotoManagerLogic.Business;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests;
+
+public class ImageTests
 {
-    public class ImageTests
+    [TestCase(0, 0)]
+    [TestCase(2, 1)]
+    public void Decrease(int initialNumberOfCopies, int expectedNumberOfCopies)
     {
-        [TestCase(0, 0)]
-        [TestCase(2, 1)]
-        public void Decrease(int initialNumberOfCopies, int expectedNumberOfCopies)
-        {
-            var testee = new Image(@"C:\temp\myImage.png", initialNumberOfCopies);
+        var testee = new Image(@"C:\temp\myImage.png", initialNumberOfCopies);
 
-            testee.Decrease();
+        testee.Decrease();
 
-            testee.NumberOfCopies.Should().Be(expectedNumberOfCopies);
-        }
+        testee.NumberOfCopies.Should().Be(expectedNumberOfCopies);
+    }
 
-        [Test]
-        public void Increase()
-        {
-            var testee = new Image(@"C:\temp\myImage.png", 2);
+    [Test]
+    public void Increase()
+    {
+        var testee = new Image(@"C:\temp\myImage.png", 2);
 
-            testee.Increase();
+        testee.Increase();
 
-            testee.NumberOfCopies.Should().Be(3);
-        }
+        testee.NumberOfCopies.Should().Be(3);
+    }
 
-        [Test]
-        public void HasId()
-        {
-            var testee = new Image(@"C:\temp\myImage.png", 2);
+    [Test]
+    public void HasId()
+    {
+        var testee = new Image(@"C:\temp\myImage.png", 2);
 
-            testee.Id.Should().NotBeNullOrWhiteSpace();
-        }
+        testee.Id.Should().NotBeNullOrWhiteSpace();
     }
 }

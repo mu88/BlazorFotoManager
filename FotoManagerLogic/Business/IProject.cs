@@ -2,32 +2,31 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FotoManagerLogic.Business
+namespace FotoManagerLogic.Business;
+
+public interface IProject
 {
-    public interface IProject
-    {
-        int NumberOfImages { get; }
+    int NumberOfImages { get; }
 
-        int SumOfCopies { get; }
+    int SumOfCopies { get; }
 
-        IImage CurrentImage { get; }
+    IImage CurrentImage { get; }
 
-        int CurrentImageIndex { get; }
+    int CurrentImageIndex { get; }
 
-        string ProjectPath { get; set; }
+    string ProjectPath { get; set; }
 
-        Task SaveAsync();
+    Task SaveAsync();
 
-        void ExportImages(string exportPath, Action<double> progressAction);
+    void ExportImages(string exportPath, Action<double> progressAction);
 
-        void NextImage();
+    void NextImage();
 
-        void PreviousImage();
+    void PreviousImage();
 
-        Task LoadAsync(string projectFilePath);
+    Task LoadAsync(string projectFilePath);
 
-        Task AddImagesAsync(IEnumerable<string> imageFilePaths);
+    Task AddImagesAsync(IEnumerable<string> imageFilePaths);
 
-        string GetCurrentImageUrl();
-    }
+    string GetCurrentImageUrl();
 }

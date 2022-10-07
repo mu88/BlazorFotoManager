@@ -1,7 +1,6 @@
-namespace FotoManager
+namespace FotoManager;
+
+public interface ITranslator
 {
-    public interface ITranslator
-    {
-        string Translate(string text);
-    }
+    string Translate(string text);
 }

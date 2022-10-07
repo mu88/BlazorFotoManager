@@ -4,20 +4,19 @@ using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
 
-namespace Tests.API
+namespace Tests.API;
+
+public class ImageControllerTests
 {
-    public class ImageControllerTests
+    [Test]
+    public void Add()
     {
-        [Test]
-        public void Add()
-        {
-            var image = new ServerImage { Id = "123", Path = "MyPath" };
-            var autoMocker = new AutoMocker();
-            var testee = autoMocker.CreateInstance<ImageController>();
+        var image = new ServerImage { Id = "123", Path = "MyPath" };
+        var autoMocker = new AutoMocker();
+        var testee = autoMocker.CreateInstance<ImageController>();
 
-            testee.Post(image);
+        testee.Post(image);
 
-            autoMocker.GetMock<IServerImageRepository>().Verify(x => x.Add(image), Times.Once);
-        }
+        autoMocker.GetMock<IServerImageRepository>().Verify(x => x.Add(image), Times.Once);
     }
 }

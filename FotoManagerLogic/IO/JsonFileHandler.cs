@@ -1,31 +1,30 @@
 ﻿using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace FotoManagerLogic.IO
+namespace FotoManagerLogic.IO;
+
+public class JsonFileHandler : IFileHandler
 {
-    public class JsonFileHandler : IFileHandler
+    /// <inheritdoc />
+    public JsonFileHandler(IFileSystem fileSystem)
     {
-        /// <inheritdoc />
-        public JsonFileHandler(IFileSystem fileSystem)
-        {
-            FileSystem = fileSystem;
-        }
+        FileSystem = fileSystem;
+    }
 
-        private IFileSystem FileSystem { get; }
+    private IFileSystem FileSystem { get; }
 
-        /// <inheritdoc />
-        public async Task<T> ReadAsync<T>(string filePath)
-        {
-            var s = await FileSystem.ReadAllTextAsync(filePath);
+    /// <inheritdoc />
+    public async Task<T> ReadAsync<T>(string filePath)
+    {
+        var s = await FileSystem.ReadAllTextAsync(filePath);
 
-            return JsonSerializer.Deserialize<T>(s);
-        }
+        return JsonSerializer.Deserialize<T>(s);
+    }
 
-        /// <inheritdoc />
-        public async Task WriteAsync<T>(T o, string filePath)
-        {
-            var s = JsonSerializer.Serialize(o);
-            await FileSystem.WriteAllTextAsync(filePath, s);
-        }
+    /// <inheritdoc />
+    public async Task WriteAsync<T>(T o, string filePath)
+    {
+        var s = JsonSerializer.Serialize(o);
+        await FileSystem.WriteAllTextAsync(filePath, s);
     }
 }

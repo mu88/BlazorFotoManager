@@ -1,20 +1,19 @@
 ﻿using System.Threading.Tasks;
 using FotoManagerLogic.Business;
 
-namespace FotoManager
+namespace FotoManager;
+
+public interface IProjectService
 {
-    public interface IProjectService
-    {
-        IProject CurrentProject { get; }
+    IProject CurrentProject { get; }
 
-        ExportStatus ExportStatus { get; }
+    ExportStatus ExportStatus { get; }
 
-        Task LoadProjectAsync();
+    Task LoadProjectAsync();
 
-        Task LoadImagesAsync();
+    Task LoadImagesAsync();
 
-        Task SaveProjectAsync();
+    Task SaveProjectAsync();
 
-        Task ExportAsync();
-    }
+    Task ExportAsync();
 }

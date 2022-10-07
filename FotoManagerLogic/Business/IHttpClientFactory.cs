@@ -1,9 +1,8 @@
 ﻿using System.Net.Http;
 
-namespace FotoManagerLogic.Business
+namespace FotoManagerLogic.Business;
+
+public interface IHttpClientFactory
 {
-    public interface IHttpClientFactory
-    {
-        HttpClient CreateClient();
-    }
+    HttpClient CreateClient();
 }
