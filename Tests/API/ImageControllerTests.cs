@@ -1,15 +1,14 @@
 ﻿using FotoManager.API;
 using FotoManagerLogic.API;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
+using NUnit.Framework;
 
 namespace Tests.API
 {
-    [TestClass]
     public class ImageControllerTests
     {
-        [TestMethod]
+        [Test]
         public void Add()
         {
             var image = new ServerImage { Id = "123", Path = "MyPath" };

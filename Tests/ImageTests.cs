@@ -1,15 +1,13 @@
 ﻿using FluentAssertions;
 using FotoManagerLogic.Business;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Tests
 {
-    [TestClass]
     public class ImageTests
     {
-        [DataTestMethod]
-        [DataRow(0, 0)]
-        [DataRow(2, 1)]
+        [TestCase(0, 0)]
+        [TestCase(2, 1)]
         public void Decrease(int initialNumberOfCopies, int expectedNumberOfCopies)
         {
             var testee = new Image(@"C:\temp\myImage.png", initialNumberOfCopies);
@@ -19,7 +17,7 @@ namespace Tests
             testee.NumberOfCopies.Should().Be(expectedNumberOfCopies);
         }
 
-        [TestMethod]
+        [Test]
         public void Increase()
         {
             var testee = new Image(@"C:\temp\myImage.png", 2);
@@ -29,7 +27,7 @@ namespace Tests
             testee.NumberOfCopies.Should().Be(3);
         }
 
-        [TestMethod]
+        [Test]
         public void HasId()
         {
             var testee = new Image(@"C:\temp\myImage.png", 2);

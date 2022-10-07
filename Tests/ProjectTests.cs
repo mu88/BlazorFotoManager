@@ -8,20 +8,18 @@ using FluentAssertions;
 using FotoManagerLogic.Business;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
+using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
 namespace Tests
 {
-    [TestClass]
     public class ProjectTests
     {
-        [DataTestMethod]
-        [DataRow(2, 1, 1)]
-        [DataRow(2, 2, 1)]
+        [TestCase(2, 1, 1)]
+        [TestCase(2, 2, 1)]
         public async Task NextImage(int numberOfImages, int numberOfNextCalls, int expectedImageIndex)
         {
             var imageFilePaths = new Collection<string>();
@@ -43,10 +41,9 @@ namespace Tests
             testee.CurrentImageIndex.Should().Be(expectedImageIndex);
         }
 
-        [DataTestMethod]
-        [DataRow(2, 1, 0)]
-        [DataRow(2, 2, 0)]
-        [DataRow(3, 1, 1)]
+        [TestCase(2, 1, 0)]
+        [TestCase(2, 2, 0)]
+        [TestCase(3, 1, 1)]
         public async Task PreviousImage(int numberOfImages, int numberOfPreviousCalls, int expectedImageIndex)
         {
             var imageFilePaths = new Collection<string>();
@@ -72,7 +69,7 @@ namespace Tests
             testee.CurrentImageIndex.Should().Be(expectedImageIndex);
         }
 
-        [TestMethod]
+        [Test]
         public async Task AddImages()
         {
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };
@@ -88,7 +85,7 @@ namespace Tests
             httpMock.GetMatchCount(mockedRequest).Should().Be(2);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Export()
         {
             var imageFilePaths = new Collection<string> { @"D:\input\Path1.jpg", @"D:\input\Path2.jpg" };
@@ -106,7 +103,7 @@ namespace Tests
             progressActionMock.Verify(x => x.Invoke(1), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public async Task GetCurrentImageUrl()
         {
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };
@@ -121,7 +118,7 @@ namespace Tests
             result.Should().MatchRegex("http:\\/\\/localhost:8001\\/api\\/images\\/\\S+");
         }
 
-        [TestMethod]
+        [Test]
         public async Task Load()
         {
             var projectFilePath = "MyProjectPath";
@@ -140,7 +137,7 @@ namespace Tests
             testee.ProjectPath.Should().Be(projectFilePath);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Save()
         {
             var imageFilePaths = new Collection<string> { "Path1", "Path2" };

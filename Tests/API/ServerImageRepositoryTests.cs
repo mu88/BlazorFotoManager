@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using FotoManagerLogic.API;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Tests.API
 {
-    [TestClass]
     public class ServerImageRepositoryTests
     {
-        [TestMethod]
+        [Test]
         public void GetImageContent()
         {
             var testee = new ServerImageRepository();

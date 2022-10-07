@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using FotoManagerLogic.Business;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Tests
 {
-    [TestClass]
     public class HttpClientFactoryTests
     {
-        [TestMethod]
+        [Test]
         public void CreateClient()
         {
             var testee = new HttpClientFactory();

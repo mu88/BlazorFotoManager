@@ -2,16 +2,15 @@
 using FluentAssertions;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
+using NUnit.Framework;
 
 namespace Tests
 {
-    [TestClass]
     public class JsonFileHandlerTests
     {
-        [TestMethod]
+        [Test]
         public async Task Deserialize()
         {
             var autoMocker = new AutoMocker();
@@ -25,7 +24,7 @@ namespace Tests
             result.Path.Should().Be("Bla");
         }
 
-        [TestMethod]
+        [Test]
         public async Task Serialize()
         {
             var autoMocker = new AutoMocker();

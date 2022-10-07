@@ -8,18 +8,17 @@ using FluentAssertions;
 using FotoManager;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
+using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
 namespace Tests
 {
-    [TestClass]
     public class ProjectServiceTests
     {
-        [TestMethod]
+        [Test]
         public async Task Export()
         {
             var autoMocker = new AutoMocker();
@@ -40,7 +39,7 @@ namespace Tests
             autoMocker.Verify<IElectronHelper>(x => x.SetProgressBar(It.IsAny<double>()), Times.AtLeastOnce);
         }
 
-        [TestMethod]
+        [Test]
         public async Task LoadImages()
         {
             var autoMocker = new AutoMocker();
@@ -59,7 +58,7 @@ namespace Tests
             httpMock.GetMatchCount(mockedRequest).Should().Be(1);
         }
 
-        [TestMethod]
+        [Test]
         public async Task LoadProject()
         {
             var autoMocker = new AutoMocker();
@@ -76,7 +75,7 @@ namespace Tests
             testee.CurrentProject.CurrentImageIndex.Should().Be(3);
         }
 
-        [TestMethod]
+        [Test]
         public async Task SaveExistingProject()
         {
             var autoMocker = new AutoMocker();
@@ -88,7 +87,7 @@ namespace Tests
             autoMocker.Verify<IFileHandler>(x => x.WriteAsync(It.IsAny<ProjectDto>(), "MyProject"), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public async Task SaveNewProject()
         {
             var autoMocker = new AutoMocker();
@@ -103,7 +102,7 @@ namespace Tests
             autoMocker.Verify<IFileHandler>(x => x.WriteAsync(It.IsAny<ProjectDto>(), "MyProject"), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public async Task StopSavingNewProjectIfUserAborts()
         {
             var autoMocker = new AutoMocker();
