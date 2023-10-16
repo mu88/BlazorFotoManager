@@ -29,7 +29,9 @@ public class ProjectTests
         }
 
         var autoMocker = new AutoMocker();
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
         await testee.AddImagesAsync(imageFilePaths);
 
@@ -53,7 +55,9 @@ public class ProjectTests
         }
 
         var autoMocker = new AutoMocker();
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
         await testee.AddImagesAsync(imageFilePaths);
         for (var i = 0; i < numberOfImages; i++)
@@ -92,7 +96,9 @@ public class ProjectTests
         var exportPath = @"C:\temp";
         var progressActionMock = new Mock<Action<double>>();
         var autoMocker = new AutoMocker();
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
         await testee.AddImagesAsync(imageFilePaths);
         testee.CurrentImage.Increase();
@@ -108,7 +114,9 @@ public class ProjectTests
     {
         var imageFilePaths = new Collection<string> { "Path1", "Path2" };
         var autoMocker = new AutoMocker();
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
         testee.ProjectPath = "MyPath";
         await testee.AddImagesAsync(imageFilePaths);
@@ -128,7 +136,9 @@ public class ProjectTests
             {
                 CurrentImageIndex = 1, Images = new Collection<ImageDto> { new ImageDto(), new ImageDto() }
             });
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
 
         await testee.LoadAsync(projectFilePath);
@@ -143,7 +153,9 @@ public class ProjectTests
         var imageFilePaths = new Collection<string> { "Path1", "Path2" };
         var projectPath = "MyPath";
         var autoMocker = new AutoMocker();
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(new MockHttpMessageHandler().ToHttpClient());
+        var httpMock = new MockHttpMessageHandler();
+        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
+        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
         var testee = autoMocker.CreateInstance<Project>();
         testee.ProjectPath = projectPath;
         await testee.AddImagesAsync(imageFilePaths);
