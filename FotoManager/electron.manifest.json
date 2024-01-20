@@ -9,7 +9,7 @@
     "productName": "FotoFlipper",
     "artifactName": "${productName}_${version}.${ext}",
     "copyright": "Copyright © 2024",
-    "buildVersion": "2.1.0",
+    "buildVersion": "2.2.0",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
