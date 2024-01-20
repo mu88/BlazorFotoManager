@@ -25,8 +25,9 @@ jobs:
       run: dotnet test --no-build FotoManager.sln
     - name: Build Windows app with ElectronNET
       run: |
-        cd FotoManager
+        pushd FotoManager
         electronize build /target win
+        popd
     - name: Copy packed executable to separate location
       run: |
         mkdir FotoManager\Release
