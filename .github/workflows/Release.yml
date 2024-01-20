@@ -32,9 +32,8 @@ jobs:
       run: |
         mkdir FotoManager\Release
         copy FotoManager\bin\Desktop\FotoFlipper*.exe FotoManager\Release
-        ls Fotomanager\Release
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: FotoManager\Release\*
+        files: FotoManager\Release\*.exe
         tag_name: ${{ github.ref_name }}
