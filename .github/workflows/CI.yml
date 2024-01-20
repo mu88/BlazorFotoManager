@@ -36,5 +36,11 @@ jobs:
       run: dotnet tool install ElectronNET.CLI -g
     - name: Build Windows app with ElectronNET
       run: |
-        cd FotoManager
+        pushd FotoManager
         electronize build /target win
+        popd
+    - name: Copy packed executable to separate location
+      run: |
+        mkdir FotoManager\Release
+        copy FotoManager\bin\Desktop\FotoFlipper*.exe FotoManager\Release
+        ls Fotomanager\Release
