@@ -32,6 +32,7 @@ jobs:
       run: |
         mkdir FotoManager\Release
         copy FotoManager\bin\Desktop\FotoFlipper*.exe FotoManager\Release
+        ls FotoManager\Release
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
