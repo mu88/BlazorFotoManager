@@ -37,9 +37,15 @@ jobs:
         pushd FotoManager
         electronize build /target win
         popd
+    - name: Write release version
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        VERSION=${GITHUB_REF_NAME#v}
+        echo Version: $VERSION
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: FotoManager/bin/Desktop/FotoFlipper*.exe # forward slashes MUST be used here, otherwise no artifacts will be found
-        tag_name: ${{ github.ref_name }}
+        tag_name: ${{ env.VERSION }}
