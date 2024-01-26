@@ -1,11 +1,17 @@
-name: CI
+name: Combined CI / Release
 
 on:
   push:
-  pull_request:
+    tags:
+      - '*'
+    branches:
+      - '**'
+
+env:
+  IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
-  build:
+  ci_cd:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -38,14 +44,14 @@ jobs:
         electronize build /target win
         popd
     - name: Write release version
-      if: startsWith(github.ref, 'refs/tags/')
+      if: ${{ env.IS_RELEASE == 'true' }}
       run: |
         VERSION=${GITHUB_REF_NAME#v}
         echo Version: $VERSION
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+      if: ${{ env.IS_RELEASE == 'true' }}
       with:
         files: FotoManager/bin/Desktop/FotoFlipper*.exe # forward slashes MUST be used here, otherwise no artifacts will be found
         tag_name: ${{ env.VERSION }}
