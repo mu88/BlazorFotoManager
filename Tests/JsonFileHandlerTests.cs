@@ -2,23 +2,24 @@
 using FluentAssertions;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
-using Moq;
-using Moq.AutoMock;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Tests;
 
 public class JsonFileHandlerTests
 {
+    private readonly JsonFileHandler _testee;
+    private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
+
+    public JsonFileHandlerTests() => _testee = new JsonFileHandler(_fileSystem);
+
     [Test]
     public async Task Deserialize()
     {
-        var autoMocker = new AutoMocker();
-        autoMocker.Setup<IFileSystem, Task<string>>(x => x.ReadAllTextAsync("MyFile"))
-            .ReturnsAsync(@"{""Path"": ""Bla"", ""NumberOfCopies"": 3}");
-        var testee = autoMocker.CreateInstance<JsonFileHandler>();
+        _fileSystem.ReadAllTextAsync("MyFile").Returns("""{"Path": "Bla", "NumberOfCopies": 3}""");
 
-        var result = await testee.ReadAsync<ImageDto>("MyFile");
+        var result = await _testee.ReadAsync<ImageDto>("MyFile");
 
         result.NumberOfCopies.Should().Be(3);
         result.Path.Should().Be("Bla");
@@ -27,11 +28,8 @@ public class JsonFileHandlerTests
     [Test]
     public async Task Serialize()
     {
-        var autoMocker = new AutoMocker();
-        var testee = autoMocker.CreateInstance<JsonFileHandler>();
+        await _testee.WriteAsync(new { Id = 1, Name = "Foo" }, "MyFile");
 
-        await testee.WriteAsync(new { Id = 1, Name = "Foo" }, "MyFile");
-
-        autoMocker.GetMock<IFileSystem>().Verify(x => x.WriteAllTextAsync("MyFile", It.IsAny<string>()), Times.Once);
+        await _fileSystem.Received(1).WriteAllTextAsync("MyFile", Arg.Any<string>());
     }
 }

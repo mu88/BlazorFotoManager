@@ -8,8 +8,7 @@ using FluentAssertions;
 using FotoManagerLogic.Business;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
-using Moq;
-using Moq.AutoMock;
+using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
@@ -18,27 +17,24 @@ namespace Tests;
 
 public class ProjectTests
 {
+    private readonly IFileHandler _fileHandler = Substitute.For<IFileHandler>();
+    private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
+    private readonly IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
+
     [TestCase(2, 1, 1)]
     [TestCase(2, 2, 1)]
     public async Task NextImage(int numberOfImages, int numberOfNextCalls, int expectedImageIndex)
     {
         var imageFilePaths = new Collection<string>();
-        for (var i = 0; i < numberOfImages; i++)
-        {
-            imageFilePaths.Add($"Image {i}");
-        }
+        for (var i = 0; i < numberOfImages; i++) { imageFilePaths.Add($"Image {i}"); }
 
-        var autoMocker = new AutoMocker();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
         await testee.AddImagesAsync(imageFilePaths);
 
-        for (var i = 0; i < numberOfNextCalls; i++)
-        {
-            testee.NextImage();
-        }
+        for (var i = 0; i < numberOfNextCalls; i++) { testee.NextImage(); }
 
         testee.CurrentImageIndex.Should().Be(expectedImageIndex);
     }
@@ -49,26 +45,16 @@ public class ProjectTests
     public async Task PreviousImage(int numberOfImages, int numberOfPreviousCalls, int expectedImageIndex)
     {
         var imageFilePaths = new Collection<string>();
-        for (var i = 0; i < numberOfImages; i++)
-        {
-            imageFilePaths.Add($"Image {i}");
-        }
+        for (var i = 0; i < numberOfImages; i++) { imageFilePaths.Add($"Image {i}"); }
 
-        var autoMocker = new AutoMocker();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
         await testee.AddImagesAsync(imageFilePaths);
-        for (var i = 0; i < numberOfImages; i++)
-        {
-            testee.NextImage();
-        }
+        for (var i = 0; i < numberOfImages; i++) { testee.NextImage(); }
 
-        for (var i = 0; i < numberOfPreviousCalls; i++)
-        {
-            testee.PreviousImage();
-        }
+        for (var i = 0; i < numberOfPreviousCalls; i++) { testee.PreviousImage(); }
 
         testee.CurrentImageIndex.Should().Be(expectedImageIndex);
     }
@@ -77,11 +63,10 @@ public class ProjectTests
     public async Task AddImages()
     {
         var imageFilePaths = new Collection<string> { "Path1", "Path2" };
-        var autoMocker = new AutoMocker();
         var httpMock = new MockHttpMessageHandler();
         var mockedRequest = httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
 
         await testee.AddImagesAsync(imageFilePaths);
 
@@ -94,30 +79,28 @@ public class ProjectTests
     {
         var imageFilePaths = new Collection<string> { @"D:\input\Path1.jpg", @"D:\input\Path2.jpg" };
         var exportPath = @"C:\temp";
-        var progressActionMock = new Mock<Action<double>>();
-        var autoMocker = new AutoMocker();
+        var progressActionMock = Substitute.For<Action<double>>();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
         await testee.AddImagesAsync(imageFilePaths);
         testee.CurrentImage.Increase();
 
-        testee.ExportImages(exportPath, progressActionMock.Object);
+        testee.ExportImages(exportPath, progressActionMock);
 
-        autoMocker.GetMock<IFileSystem>().Verify(x => x.Copy(@"D:\input\Path1.jpg", @"C:\temp\Path1_0.jpg", true), Times.Once);
-        progressActionMock.Verify(x => x.Invoke(1), Times.Once);
+        _fileSystem.Received(1).Copy(@"D:\input\Path1.jpg", @"C:\temp\Path1_0.jpg", true);
+        progressActionMock.Received(1).Invoke(1);
     }
 
     [Test]
     public async Task GetCurrentImageUrl()
     {
         var imageFilePaths = new Collection<string> { "Path1", "Path2" };
-        var autoMocker = new AutoMocker();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
         testee.ProjectPath = "MyPath";
         await testee.AddImagesAsync(imageFilePaths);
 
@@ -130,16 +113,11 @@ public class ProjectTests
     public async Task Load()
     {
         var projectFilePath = "MyProjectPath";
-        var autoMocker = new AutoMocker();
-        autoMocker.Setup<IFileHandler, Task<ProjectDto>>(x => x.ReadAsync<ProjectDto>(projectFilePath))
-            .ReturnsAsync(new ProjectDto
-            {
-                CurrentImageIndex = 1, Images = new Collection<ImageDto> { new ImageDto(), new ImageDto() }
-            });
+        _fileHandler.ReadAsync<ProjectDto>(projectFilePath).Returns(new ProjectDto { CurrentImageIndex = 1, Images = new Collection<ImageDto> { new(), new() } });
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
 
         await testee.LoadAsync(projectFilePath);
 
@@ -152,17 +130,17 @@ public class ProjectTests
     {
         var imageFilePaths = new Collection<string> { "Path1", "Path2" };
         var projectPath = "MyPath";
-        var autoMocker = new AutoMocker();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        autoMocker.Setup<IHttpClientFactory, HttpClient>(x => x.CreateClient()).Returns(httpMock.ToHttpClient);
-        var testee = autoMocker.CreateInstance<Project>();
+        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
+        var testee = CreateTestee();
         testee.ProjectPath = projectPath;
         await testee.AddImagesAsync(imageFilePaths);
 
         await testee.SaveAsync();
 
-        autoMocker.GetMock<IFileHandler>()
-            .Verify(x => x.WriteAsync(It.Is<ProjectDto>(d => d.Images.Count() == 2), projectPath), Times.Once);
+        await _fileHandler.Received(1).WriteAsync(Arg.Is<ProjectDto>(d => d.Images.Count() == 2), projectPath);
     }
+
+    private Project CreateTestee() => new(_fileHandler, _fileSystem, _httpClientFactory);
 }

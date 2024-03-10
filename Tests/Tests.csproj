@@ -10,8 +10,7 @@
     </PackageReference>
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
-    <PackageReference Include="Moq.AutoMock" Version="3.5.0" />
+    <PackageReference Include="NSubstitute" Version="5.1.0"/>
     <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
@@ -19,5 +18,11 @@
   <ItemGroup>
     <ProjectReference Include="..\FotoManagerLogic\FotoManagerLogic.csproj" />
     <ProjectReference Include="..\FotoManager\FotoManager.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="NUnit.Framework.FixtureLifeCycle">
+      <_Parameter1>NUnit.Framework.LifeCycle.InstancePerTestCase</_Parameter1>
+      <_Parameter1_IsLiteral>true</_Parameter1_IsLiteral>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>
