@@ -50,7 +50,7 @@ jobs:
         echo Version: $VERSION
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
       with:
         files: FotoManager/bin/Desktop/FotoFlipper*.exe # forward slashes MUST be used here, otherwise no artifacts will be found
