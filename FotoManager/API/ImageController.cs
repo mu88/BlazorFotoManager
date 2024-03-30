@@ -9,25 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace FotoManager.API;
 
 [Route("api/images")]
-public class ImageController : Controller
+public class ImageController(IServerImageRepository serverImageRepository) : Controller
 {
     private const int ExifOrientationId = 0x112; //274
 
-    public ImageController(IServerImageRepository serverImageRepository)
-    {
-        ServerImageRepository = serverImageRepository;
-    }
-
-    private IServerImageRepository ServerImageRepository { get; }
+    private IServerImageRepository ServerImageRepository { get; } = serverImageRepository;
 
     [HttpGet("{id}")]
     public IActionResult Get(string id)
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new PlatformNotSupportedException();
-        }
-                
+        if (!OperatingSystem.IsWindows()) { throw new PlatformNotSupportedException(); }
+
         var originalImage = Image.FromFile(ServerImageRepository.GetPath(id));
         ExifRotate(originalImage);
         var newImage = new Bitmap(originalImage);
@@ -45,15 +37,9 @@ public class ImageController : Controller
 
     private void ExifRotate(Image image)
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            throw new PlatformNotSupportedException();
-        }
-            
-        if (!image.PropertyIdList.Contains(ExifOrientationId))
-        {
-            return;
-        }
+        if (!OperatingSystem.IsWindows()) { throw new PlatformNotSupportedException(); }
+
+        if (!image.PropertyIdList.Contains(ExifOrientationId)) { return; }
 
         var exifProperty = image.GetPropertyItem(ExifOrientationId);
         int exifValue = BitConverter.ToUInt16(exifProperty?.Value ?? throw new NullReferenceException(), 0);
@@ -69,9 +55,6 @@ public class ImageController : Controller
             _ => RotateFlipType.RotateNoneFlipNone
         };
 
-        if (rotation != RotateFlipType.RotateNoneFlipNone)
-        {
-            image.RotateFlip(rotation);
-        }
+        if (rotation != RotateFlipType.RotateNoneFlipNone) { image.RotateFlip(rotation); }
     }
 }

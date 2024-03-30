@@ -2,14 +2,9 @@ using Microsoft.Extensions.Localization;
 
 namespace FotoManager;
 
-public class Translator : ITranslator
+public class Translator(IStringLocalizer<Translator> localizer) : ITranslator
 {
-    public Translator(IStringLocalizer<Translator> localizer)
-    {
-        Localizer = localizer;
-    }
-
-    private IStringLocalizer<Translator> Localizer { get; }
+    private IStringLocalizer<Translator> Localizer { get; } = localizer;
 
     /// <inheritdoc />
     public string Translate(string text)
