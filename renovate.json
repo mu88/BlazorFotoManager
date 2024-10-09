@@ -1,31 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    "group:all",
-    ":semanticCommitTypeAll(chore)",
-    "schedule:earlyMondays"
-  ],
-  "packageRules": [
-    {
-      "description": "Automatically merge minor and patch-level updates",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "automerge": true,
-      "automergeType": "branch"
-    },
-    {
-      "description": "Wait with non-major updates of global.json so that it is likely to be installed on all dev machines, too",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "matchFileNames": ["global.json"],
-      "minimumReleaseAge": "14 days",
-      "automerge": true,
-      "automergeType": "branch"
-    },
-    {
-      "description": "Major updates of global.json will be done manually.",
-      "matchUpdateTypes": ["major"],
-      "matchFileNames": ["global.json"],
-      "enabled": false
-    }
-  ]
+  "extends": ["github>mu88/renovate-config"]
 }
