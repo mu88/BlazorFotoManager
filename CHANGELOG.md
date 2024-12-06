@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.0.0"></a>
+## [3.0.0](https://www.github.com/mu88/BlazorFotoManager/releases/tag/v3.0.0) (2024-12-06)
+
+### Features
+
+* **deps:** upgrade to .NET 9 ([cd450c7](https://www.github.com/mu88/BlazorFotoManager/commit/cd450c7ba739740f5dd8e4b5a4add6ea2580688d))
+
+### Breaking Changes
+
+* **deps:** upgrade to .NET 9 ([cd450c7](https://www.github.com/mu88/BlazorFotoManager/commit/cd450c7ba739740f5dd8e4b5a4add6ea2580688d))
+
 <a name="2.4.0"></a>
 ## [2.4.0](https://www.github.com/mu88/BlazorFotoManager/releases/tag/v2.4.0) (2024-01-21)
 
