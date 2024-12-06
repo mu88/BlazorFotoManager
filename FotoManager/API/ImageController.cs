@@ -18,7 +18,10 @@ public class ImageController(IServerImageRepository serverImageRepository) : Con
     [HttpGet("{id}")]
     public IActionResult Get(string id)
     {
-        if (!OperatingSystem.IsWindows()) { throw new PlatformNotSupportedException(); }
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new PlatformNotSupportedException();
+        }
 
         var originalImage = Image.FromFile(ServerImageRepository.GetPath(id));
         ExifRotate(originalImage);
@@ -35,11 +38,17 @@ public class ImageController(IServerImageRepository serverImageRepository) : Con
         ServerImageRepository.Add(entry);
     }
 
-    private void ExifRotate(Image image)
+    private static void ExifRotate(Image image)
     {
-        if (!OperatingSystem.IsWindows()) { throw new PlatformNotSupportedException(); }
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new PlatformNotSupportedException();
+        }
 
-        if (!image.PropertyIdList.Contains(ExifOrientationId)) { return; }
+        if (!image.PropertyIdList.Contains(ExifOrientationId))
+        {
+            return;
+        }
 
         var exifProperty = image.GetPropertyItem(ExifOrientationId);
         int exifValue = BitConverter.ToUInt16(exifProperty?.Value ?? throw new NullReferenceException(), 0);
@@ -55,6 +64,9 @@ public class ImageController(IServerImageRepository serverImageRepository) : Con
             _ => RotateFlipType.RotateNoneFlipNone
         };
 
-        if (rotation != RotateFlipType.RotateNoneFlipNone) { image.RotateFlip(rotation); }
+        if (rotation != RotateFlipType.RotateNoneFlipNone)
+        {
+            image.RotateFlip(rotation);
+        }
     }
 }

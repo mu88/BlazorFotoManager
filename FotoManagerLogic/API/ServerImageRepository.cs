@@ -6,10 +6,7 @@ namespace FotoManagerLogic.API;
 public class ServerImageRepository : IServerImageRepository
 {
     /// <inheritdoc />
-    public ServerImageRepository()
-    {
-        Content = new List<ServerImage>();
-    }
+    public ServerImageRepository() => Content = [];
 
     private List<ServerImage> Content { get; }
 

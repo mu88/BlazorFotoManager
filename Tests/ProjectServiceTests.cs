@@ -32,7 +32,7 @@ public class ProjectServiceTests
         var httpClient = httpMock.ToHttpClient();
         _httpClientFactory.CreateClient().Returns(httpClient);
         var testee = CreateTestee();
-        await testee.CurrentProject.AddImagesAsync(new[] { "MyImage.jpg" });
+        await testee.CurrentProject.AddImagesAsync(["MyImage.jpg"]);
         testee.CurrentProject.CurrentImage.Increase();
 
         await testee.ExportAsync();
@@ -44,7 +44,7 @@ public class ProjectServiceTests
     [Test]
     public async Task LoadImages()
     {
-        _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns(new[] { "MyImage" });
+        _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns(["MyImage"]);
         var httpMock = new MockHttpMessageHandler();
         var mockedRequest = httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
         _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
@@ -59,7 +59,7 @@ public class ProjectServiceTests
     [Test]
     public async Task LoadProject()
     {
-        _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns(new[] { "MyProject" });
+        _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns(["MyProject"]);
         _fileHandler.ReadAsync<ProjectDto>("MyProject").Returns(new ProjectDto { Images = new Collection<ImageDto>(), CurrentImageIndex = 3 });
         var testee = CreateTestee();
 

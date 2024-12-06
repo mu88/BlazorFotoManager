@@ -41,14 +41,11 @@ public class ProjectService : IProjectService
         var openDialogOptions = new OpenDialogOptions
         {
             Title = Translator.Translate("Please choose your Project File"),
-            Properties = new[] { OpenDialogProperty.openFile },
-            Filters = new[]
-            {
-                new FileFilter
-                {
-                    Extensions = new[] { "json" }, Name = Translator.Translate("Project File")
-                }
-            }
+            Properties = [OpenDialogProperty.openFile],
+            Filters =
+            [
+                new FileFilter { Extensions = ["json"], Name = Translator.Translate("Project File") }
+            ]
         };
 
         var projectFilePath = (await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions))
@@ -66,18 +63,15 @@ public class ProjectService : IProjectService
         var openDialogOptions = new OpenDialogOptions
         {
             Title = Translator.Translate("Please choose your Images"),
-            Properties = new[] { OpenDialogProperty.openFile, OpenDialogProperty.multiSelections },
-            Filters = new[]
-            {
-                new FileFilter
-                {
-                    Extensions = new[] { "jpg", "png", "gif" }, Name = Translator.Translate("Images")
-                }
-            }
+            Properties = [OpenDialogProperty.openFile, OpenDialogProperty.multiSelections],
+            Filters =
+            [
+                new FileFilter { Extensions = ["jpg", "png", "gif"], Name = Translator.Translate("Images") }
+            ]
         };
         var imageFilePaths = await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions);
 
-        if (imageFilePaths != null && imageFilePaths.Any())
+        if (imageFilePaths != null && imageFilePaths.Length != 0)
         {
             await CurrentProject.AddImagesAsync(imageFilePaths);
         }
@@ -91,13 +85,10 @@ public class ProjectService : IProjectService
             var saveDialogOptions = new SaveDialogOptions
             {
                 Title = Translator.Translate("Please choose where to save your Project File"),
-                Filters = new[]
-                {
-                    new FileFilter
-                    {
-                        Extensions = new[] { "json" }, Name = Translator.Translate("Project File")
-                    }
-                }
+                Filters =
+                [
+                    new FileFilter { Extensions = ["json"], Name = Translator.Translate("Project File") }
+                ]
             };
             var saveFilePath = await ElectronHelper.ShowSaveDialogAsync(ElectronHelper.GetBrowserWindow(), saveDialogOptions);
 
@@ -117,8 +108,7 @@ public class ProjectService : IProjectService
     {
         var openDialogOptions = new OpenDialogOptions
         {
-            Title = Translator.Translate("Please choose the Export location"),
-            Properties = new[] { OpenDialogProperty.openDirectory }
+            Title = Translator.Translate("Please choose the Export location"), Properties = [OpenDialogProperty.openDirectory]
         };
         var exportPath =
             (await ElectronHelper.ShowOpenDialogAsync(ElectronHelper.GetBrowserWindow(), openDialogOptions)).FirstOrDefault();

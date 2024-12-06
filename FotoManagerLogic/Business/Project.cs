@@ -24,7 +24,7 @@ public class Project : IProject
         FileSystem = fileSystem;
 
         HttpClient = httpClientFactory.CreateClient();
-        Images = new Collection<IImage>();
+        Images = [];
         CurrentImageIndex = 0;
         ProjectPath = string.Empty;
     }
@@ -126,9 +126,9 @@ public class Project : IProject
     {
         Images.Add(image);
         await HttpClient.PostAsync(ApiEndpoint,
-                                   new StringContent(JsonSerializer.Serialize(new ServerImage { Id = image.Id, Path = image.Path }),
-                                                     Encoding.UTF8,
-                                                     "application/json"));
+            new StringContent(JsonSerializer.Serialize(new ServerImage { Id = image.Id, Path = image.Path }),
+                Encoding.UTF8,
+                "application/json"));
     }
 
     private ProjectDto GetProjectDto()

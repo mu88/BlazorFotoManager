@@ -41,14 +41,18 @@ public class Startup(IConfiguration configuration)
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
-        else { app.UseExceptionHandler("/Error"); }
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+        }
 
         app.UseRequestLocalization(new RequestLocalizationOptions
         {
-            DefaultRequestCulture = new RequestCulture("de"),
-            SupportedCultures = new[] { new CultureInfo("de") },
-            SupportedUICultures = new[] { new CultureInfo("de") }
+            DefaultRequestCulture = new RequestCulture("de"), SupportedCultures = [new CultureInfo("de")], SupportedUICultures = [new CultureInfo("de")]
         });
 
         app.UseStaticFiles();
