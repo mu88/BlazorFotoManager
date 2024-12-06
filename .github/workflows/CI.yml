@@ -10,11 +10,18 @@ on:
 
 env:
   IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/') }}
+  VERSION: '0.0.1'
 
 jobs:
   ci_cd:
     runs-on: windows-latest
     steps:
+    - name: Write release version
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+        $VERSION = $env:GITHUB_REF_NAME.TrimStart('v')
+        Write-Host "Version: $VERSION"
+        Add-Content -Path $env:GITHUB_ENV -Value "VERSION=$VERSION"
     - uses: actions/checkout@v4
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
@@ -42,14 +49,8 @@ jobs:
     - name: Build Windows app with ElectronNET
       run: |
         pushd FotoManager
-        electronize build /target win
+        electronize build /target win /Version ${{ env.VERSION }}
         popd
-    - name: Write release version
-      if: ${{ env.IS_RELEASE == 'true' }}
-      run: |
-        VERSION=${GITHUB_REF_NAME#v}
-        echo Version: $VERSION
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Release
       uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
