@@ -1,4 +1,5 @@
 {
   "name": "C# (.NET)",
-  "image": "registry.hub.docker.com/mu88/devcontainers-dotnet:sdk-9.0.202"
+  "image": "registry.hub.docker.com/mu88/devcontainers-dotnet:sdk-9.0.202",
+  "postStartCommand": "dotnet tool install ElectronNET.CLI -g"
 }
