@@ -22,7 +22,7 @@ jobs:
         $VERSION = $env:GITHUB_REF_NAME.TrimStart('v')
         Write-Host "Version: $VERSION"
         Add-Content -Path $env:GITHUB_ENV -Value "VERSION=$VERSION"
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
     - name: Set up Java
