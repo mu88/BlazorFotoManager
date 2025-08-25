@@ -15,6 +15,7 @@ env:
 jobs:
   ci_cd:
     runs-on: windows-latest
+
     steps:
     - name: Write release version
       if: ${{ env.IS_RELEASE == 'true' }}
@@ -22,33 +23,48 @@ jobs:
         $VERSION = $env:GITHUB_REF_NAME.TrimStart('v')
         Write-Host "Version: $VERSION"
         Add-Content -Path $env:GITHUB_ENV -Value "VERSION=$VERSION"
-    - uses: actions/checkout@v5
+    - name: Check out code
+      uses: actions/checkout@v5
+
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
+
     - name: Set up Java
       uses: actions/setup-java@v5
       with:
         distribution: 'microsoft'
         java-version: '17'
+
     - name: Restore dependencies
       run: dotnet restore FotoManager.sln
+
     - name: Begin Sonar scan
+      env:
+        ENV_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:mu88_BlazorFotoManager /o:mu88 /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io /d:sonar.cs.opencover.reportsPaths=Tests\coverage.opencover.xml /s:${{ github.workspace }}/SonarQube.Analysis.xml
+        dotnet sonarscanner begin /k:mu88_BlazorFotoManager /o:mu88 /d:sonar.token=${{ env.ENV_SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io /d:sonar.cs.opencover.reportsPaths=Tests\coverage.opencover.xml /s:${{ github.workspace }}/SonarQube.Analysis.xml
+
     - name: Build
       run: dotnet build --no-restore FotoManager.sln
+
     - name: Test and collect coverage
       run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
     - name: End Sonar scan
-      run: dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
+      env:
+        ENV_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.token=${{ env.ENV_SONAR_TOKEN }}
+
     - name: Install global tool ElectronNET.CLI
       run: dotnet tool install ElectronNET.CLI -g
+
     - name: Build Windows app with ElectronNET
       run: |
         pushd FotoManager
         electronize build /target win /Version ${{ env.VERSION }}
         popd
+
     - name: Release
       uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
