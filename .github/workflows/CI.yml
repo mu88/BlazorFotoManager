@@ -35,8 +35,11 @@ jobs:
         distribution: 'microsoft'
         java-version: '17'
 
-    - name: Restore dependencies
-      run: dotnet restore FotoManager.sln
+    - name: Restore .NET tools
+      run: dotnet tool restore
+
+    - name: Restore NuGet dependencies
+      run: dotnet restore
 
     - name: Begin Sonar scan
       env:
@@ -56,13 +59,10 @@ jobs:
         ENV_SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: dotnet sonarscanner end /d:sonar.token=${{ env.ENV_SONAR_TOKEN }}
 
-    - name: Install global tool ElectronNET.CLI
-      run: dotnet tool install ElectronNET.CLI -g
-
     - name: Build Windows app with ElectronNET
       run: |
         pushd FotoManager
-        electronize build /target win /Version ${{ env.VERSION }}
+        dotnet tool run electronize build /target win /Version ${{ env.VERSION }}
         popd
 
     - name: Attest build provenance

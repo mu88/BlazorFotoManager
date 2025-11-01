@@ -6,7 +6,15 @@
       "version": "2.3.1",
       "commands": [
         "versionize"
-      ]
+      ],
+      "rollForward": false
+    },
+    "electronnet.cli": {
+      "version": "23.6.2",
+      "commands": [
+        "electronize"
+      ],
+      "rollForward": false
     }
   }
 }
