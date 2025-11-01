@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/refs/heads/master/packages/app-builder-lib/scheme.json",
+  "appId": "${productName}.${version}",
+  "productName": "FotoFlipper",
+  "artifactName": "${productName}_${version}.${ext}",
+  "compression": "maximum",
+  "directories": {
+    "output": "../../../bin/Desktop"
+  },
+  "win": {
+    "target": "portable"
+  },
+  "icon": "../../../assets/Icon.ico",
+  "extraResources": [
+    {
+      "from": "./bin",
+      "to": "bin",
+      "filter": ["**/*"]
+    }
+  ],
+  "files": [
+    {
+      "from": "./ElectronHostHook/node_modules",
+      "to": "ElectronHostHook/node_modules",
+      "filter": ["**/*"]
+    },
+    "**/*"
+  ]
+}

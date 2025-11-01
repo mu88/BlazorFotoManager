@@ -9,13 +9,6 @@
       ],
       "rollForward": false
     },
-    "electronnet.cli": {
-      "version": "23.6.2",
-      "commands": [
-        "electronize"
-      ],
-      "rollForward": false
-    },
     "dotnet-sonarscanner": {
       "version": "10.3.0",
       "commands": [
