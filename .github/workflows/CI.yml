@@ -65,6 +65,12 @@ jobs:
         electronize build /target win /Version ${{ env.VERSION }}
         popd
 
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@v3
+      if: ${{ env.IS_RELEASE == 'true' }}
+      with:
+        subject-path: FotoManager/bin/Desktop/FotoFlipper*.exe
+
     - name: Release
       uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
