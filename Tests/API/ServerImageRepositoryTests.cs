@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Tests.API;
 
+[Category("Unit")]
 public class ServerImageRepositoryTests
 {
     [Test]

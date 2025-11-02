@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace Tests.API;
 
+[Category("Unit")]
 public class ImageControllerTests
 {
     private readonly IServerImageRepository _serverImageRepository = Substitute.For<IServerImageRepository>();

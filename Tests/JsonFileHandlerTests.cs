@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Tests;
 
+[Category("Unit")]
 public class JsonFileHandlerTests
 {
     private readonly JsonFileHandler _testee;

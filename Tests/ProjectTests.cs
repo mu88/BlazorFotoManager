@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +16,7 @@ using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
 namespace Tests;
 
+[Category("Unit")]
 public class ProjectTests
 {
     private readonly IFileHandler _fileHandler = Substitute.For<IFileHandler>();
@@ -77,8 +79,12 @@ public class ProjectTests
     [Test]
     public async Task Export()
     {
-        var imageFilePaths = new Collection<string> { @"D:\input\Path1.jpg", @"D:\input\Path2.jpg" };
-        var exportPath = @"C:\temp";
+        var imageFilePaths = new Collection<string>
+        {
+            Path.Combine("input", "Path1.jpg"),
+            Path.Combine("input", "Path2.jpg")
+        };
+        var exportPath = "output";
         var progressActionMock = Substitute.For<Action<double>>();
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
@@ -89,7 +95,7 @@ public class ProjectTests
 
         testee.ExportImages(exportPath, progressActionMock);
 
-        _fileSystem.Received(1).Copy(@"D:\input\Path1.jpg", @"C:\temp\Path1_0.jpg", true);
+        _fileSystem.Received(1).Copy(Path.Combine("input", "Path1.jpg"),Path.Combine(exportPath, "Path1_0.jpg"), true);
         progressActionMock.Received(1).Invoke(1);
     }
 

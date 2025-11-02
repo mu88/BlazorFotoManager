@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Tests;
 
+[Category("Unit")]
 public class ImageTests
 {
     [TestCase(0, 0)]

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
 namespace Tests;
 
+[Category("Unit")]
 public class ProjectServiceTests
 {
     private readonly IFileHandler _fileHandler = Substitute.For<IFileHandler>();
@@ -26,7 +28,9 @@ public class ProjectServiceTests
     [Test]
     public async Task Export()
     {
-        _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns([@"C:\temp"]);
+        _electronHelper
+            .ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>())
+            .Returns([Path.Combine("temp", "subdir")]);
         var httpMock = new MockHttpMessageHandler();
         httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
         var httpClient = httpMock.ToHttpClient();
@@ -37,7 +41,7 @@ public class ProjectServiceTests
 
         await testee.ExportAsync();
 
-        _fileSystem.Received(1).Copy(Arg.Any<string>(), @"C:\temp\MyImage_0.jpg", true);
+        _fileSystem.Received(1).Copy(Arg.Any<string>(), Path.Combine("temp", "subdir", "MyImage_0.jpg"), true);
         _electronHelper.Received().SetProgressBar(Arg.Any<double>());
     }
 

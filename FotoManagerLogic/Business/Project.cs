@@ -17,7 +17,6 @@ public class Project : IProject
 {
     private const string ApiEndpoint = "http://localhost:8001/api/images";
 
-    /// <inheritdoc />
     public Project(IFileHandler fileHandler, IFileSystem fileSystem, IHttpClientFactory httpClientFactory)
     {
         FileHandler = fileHandler;
@@ -117,10 +116,7 @@ public class Project : IProject
         }
     }
 
-    public string GetCurrentImageUrl()
-    {
-        return $"{ApiEndpoint}/{CurrentImage.Id}";
-    }
+    public string GetCurrentImageUrl() => $"{ApiEndpoint}/{CurrentImage.Id}";
 
     private async Task AddImageAsync(Image image)
     {
