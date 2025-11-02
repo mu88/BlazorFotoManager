@@ -1,8 +1,7 @@
 # BlazorFotoManager
 Rewrite of [FotoManager](https://github.com/mu88/FotoManager) using [Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/).
 
-![CI](https://github.com/mu88/BlazorFotoManager/workflows/CI/badge.svg)
-![Release](https://github.com/mu88/BlazorFotoManager/workflows/Release/badge.svg)
+![Combined CI / Release](https://github.com/mu88/BlazorFotoManager/actions/workflows/CI.yml/badge.svg)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_BlazorFotoManager&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mu88_BlazorFotoManager)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_BlazorFotoManager&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mu88_BlazorFotoManager)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_BlazorFotoManager&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mu88_BlazorFotoManager)
