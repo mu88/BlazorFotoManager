@@ -23,6 +23,11 @@ jobs:
 
     needs: shared_ci_cd
 
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+
     steps:
     - name: Check out code
       uses: actions/checkout@v5
@@ -67,13 +72,28 @@ jobs:
       uses: actions/attest-build-provenance@v3
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
-        subject-path: FotoManager/publish/bin/FotoFlipper*.exe
+        subject-path: FotoManager/publish/bin/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        output-file: sbom.json
+        path: .
+
+    - name: Attest SBOM
+      uses: actions/attest-sbom@v2
+      if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
+      with:
+        sbom-path: sbom.json
+        subject-path: FotoManager/publish/bin/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
-        files: FotoManager/publish/bin/FotoFlipper*.exe # forward slashes MUST be used here, otherwise no artifacts will be found
+        files: |
+          sbom.json
+          FotoManager/publish/bin/FotoFlipper*.exe
         name: ${{ needs.shared_ci_cd.outputs.release_version }}
         tag_name: ${{ needs.shared_ci_cd.outputs.release_version }}
         body: ${{ steps.changelog.outputs.changes }}
