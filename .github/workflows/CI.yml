@@ -60,13 +60,24 @@ jobs:
       id: changelog
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       run: |
-        $release_notes = dotnet tool versionize changelog -v ${{ needs.shared_ci_cd.outputs.release_version }}
+        # See https://github.com/versionize/versionize/issues/189: Versionize requires git user config to be set
+        git config user.name "John Doe"
+        git config user.email "johndoe@example.com"
+
+        dotnet tool restore
+        dotnet tool run versionize --skip-dirty --dry-run changelog -v ${{ needs.shared_ci_cd.outputs.release_version }} >> ${{ runner.temp }}/release_notes.md || true
+        release_notes=$(cat ${{ runner.temp }}/release_notes.md)
+        echo "Determined release notes:"
+        echo "$release_notes"
         if [ -z "$release_notes" ]; then
-          echo "No release notes generated, something went wrong."
+          echo "No release notes determined, something went wrong."
           exit 1
         fi
 
-        echo "changes=$release_notes" >> $GITHUB_OUTPUT
+        # Use GitHub Actions multiline output syntax to safely pass release notes (they may contain newlines and lines starting with '*')
+        echo "changes<<EOF" >> $GITHUB_OUTPUT
+        cat ${{ runner.temp }}/release_notes.md >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Attest build provenance
       uses: actions/attest-build-provenance@v3
