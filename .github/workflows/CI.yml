@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@a27cb31c1879dcec13765ac01bb315041dc5ad86
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@2f49bee4a144cd0c47a463e737c1ba50887d3924
     with:
       dotnet-cache-dependencies-via-lock-file: false # by default, NuGet lock files are used. However, ElectronNET seem to have issues with that
       sonar-key: mu88_BlazorFotoManager
@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v5
@@ -83,7 +83,7 @@ jobs:
       uses: actions/attest-build-provenance@v3
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
-        subject-path: FotoManager/publish/bin/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
+        subject-path: FotoManager/publish/Release/net*/*/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
 
     - name: Generate SBOM
       uses: anchore/sbom-action@v0
@@ -92,11 +92,11 @@ jobs:
         path: .
 
     - name: Attest SBOM
-      uses: actions/attest-sbom@v2
+      uses: actions/attest-sbom@v3
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
         sbom-path: sbom.json
-        subject-path: FotoManager/publish/bin/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
+        subject-path: FotoManager/publish/Release/net*/*/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
@@ -104,7 +104,7 @@ jobs:
       with:
         files: |
           sbom.json
-          FotoManager/publish/bin/FotoFlipper*.exe
+          FotoManager/publish/Release/net*/*/FotoFlipper_${{ steps.determine_version.outputs.version }}.exe
         name: ${{ needs.shared_ci_cd.outputs.release_version }}
         tag_name: ${{ needs.shared_ci_cd.outputs.release_version }}
         body: ${{ steps.changelog.outputs.changes }}
