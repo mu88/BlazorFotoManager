@@ -1,0 +1,59 @@
+name: Combined CI / Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  shared_ci_cd:
+    permissions:
+      contents: read
+
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@0213ed5565c48d2c19f9d2588dc49a79c4339a33
+    with:
+      dotnet-cache-dependencies-via-lock-file: false # by default, NuGet lock files are used. However, ElectronNET seem to have issues with that
+      sonar-key: mu88_BlazorFotoManager
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+  ci_cd:
+    runs-on: windows-latest
+
+    needs: shared_ci_cd
+
+    permissions:
+      attestations: write # Needed for build provenance and SBOM attestation
+      contents: write # Needed to create GitHub Release
+      id-token: write # Needed for attestations
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        global-json-file: global.json
+
+    - name: Build Windows app with ElectronNET
+      run: dotnet publish FotoManager\FotoManager.csproj /p:PublishProfile=win-x64 /p:Version=${{ needs.shared_ci_cd.outputs.version }}
+
+    - name: Generate SBOM and attest build provenance and SBOM
+      uses: mu88/github-actions/.github/actions/attest-provenance-sbom@0213ed5565c48d2c19f9d2588dc49a79c4339a33
+      with:
+        is-release: ${{ needs.shared_ci_cd.outputs.is_release }}
+        sbom-file: sbom.json
+        sbom-path: .
+        subject-path: FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
+      with:
+        files: |
+          sbom.json
+          FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
+        name: ${{ needs.shared_ci_cd.outputs.version }}
+        body: ${{ needs.shared_ci_cd.outputs.release_notes }}
