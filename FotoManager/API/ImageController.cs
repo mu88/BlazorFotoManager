@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -12,6 +13,7 @@ namespace FotoManager.API;
 public class ImageController(IServerImageRepository serverImageRepository) : Controller
 {
     private const int ExifOrientationId = 0x112; //274
+    private static readonly ConcurrentDictionary<string, byte[]> ImageCache = new();
 
     private IServerImageRepository ServerImageRepository { get; } = serverImageRepository;
 
@@ -23,19 +25,24 @@ public class ImageController(IServerImageRepository serverImageRepository) : Con
             throw new PlatformNotSupportedException();
         }
 
-        var originalImage = Image.FromFile(ServerImageRepository.GetPath(id));
-        ExifRotate(originalImage);
-        var newImage = new Bitmap(originalImage);
-
-        var memoryStream = new MemoryStream();
-        newImage.Save(memoryStream, ImageFormat.Jpeg);
-        return File(memoryStream.GetBuffer(), "image/jpeg");
+        var imageBytes = ImageCache.GetOrAdd(id, LoadAndProcessImage);
+        return File(imageBytes, "image/jpeg");
     }
 
     [HttpPost]
     public void Post([FromBody] ServerImage entry)
     {
         ServerImageRepository.Add(entry);
+    }
+
+    private byte[] LoadAndProcessImage(string id)
+    {
+        using var originalImage = Image.FromFile(ServerImageRepository.GetPath(id));
+        ExifRotate(originalImage);
+
+        using var memoryStream = new MemoryStream();
+        originalImage.Save(memoryStream, ImageFormat.Jpeg);
+        return memoryStream.ToArray();
     }
 
     private static void ExifRotate(Image image)
