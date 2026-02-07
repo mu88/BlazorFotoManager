@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
@@ -11,8 +9,6 @@ using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
 using NSubstitute;
 using NUnit.Framework;
-using RichardSzalay.MockHttp;
-using IHttpClientFactory = FotoManagerLogic.Business.IHttpClientFactory;
 
 namespace Tests;
 
@@ -21,7 +17,6 @@ public class ProjectServiceTests
 {
     private readonly IFileHandler _fileHandler = Substitute.For<IFileHandler>();
     private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
-    private readonly IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
     private readonly IElectronHelper _electronHelper = Substitute.For<IElectronHelper>();
     private readonly ITranslator _translator = Substitute.For<ITranslator>();
 
@@ -31,12 +26,8 @@ public class ProjectServiceTests
         _electronHelper
             .ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>())
             .Returns([Path.Combine("temp", "subdir")]);
-        var httpMock = new MockHttpMessageHandler();
-        httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        var httpClient = httpMock.ToHttpClient();
-        _httpClientFactory.CreateClient().Returns(httpClient);
         var testee = CreateTestee();
-        await testee.CurrentProject.AddImagesAsync(["MyImage.jpg"]);
+        testee.CurrentProject.AddImages(["MyImage.jpg"]);
         testee.CurrentProject.CurrentImage.Increase();
 
         await testee.ExportAsync();
@@ -49,15 +40,11 @@ public class ProjectServiceTests
     public async Task LoadImages()
     {
         _electronHelper.ShowOpenDialogAsync(Arg.Any<BrowserWindow>(), Arg.Any<OpenDialogOptions>()).Returns(["MyImage"]);
-        var httpMock = new MockHttpMessageHandler();
-        var mockedRequest = httpMock.When(HttpMethod.Post, "/api/images").Respond(HttpStatusCode.OK);
-        _httpClientFactory.CreateClient().Returns(httpMock.ToHttpClient());
         var testee = CreateTestee();
 
         await testee.LoadImagesAsync();
 
         testee.CurrentProject.NumberOfImages.Should().Be(1);
-        httpMock.GetMatchCount(mockedRequest).Should().Be(1);
     }
 
     [Test]
@@ -110,7 +97,6 @@ public class ProjectServiceTests
     private ProjectService CreateTestee() =>
         new(_fileHandler,
             _fileSystem,
-            _httpClientFactory,
             _electronHelper,
             _translator);
 }

@@ -12,14 +12,13 @@ public class ProjectService : IProjectService
     /// <inheritdoc />
     public ProjectService(IFileHandler fileHandler,
                           IFileSystem fileSystem,
-                          IHttpClientFactory httpClientFactory,
                           IElectronHelper electronHelper,
                           ITranslator translator)
     {
         FileHandler = fileHandler;
         ElectronHelper = electronHelper;
         Translator = translator;
-        CurrentProject = new Project(FileHandler, fileSystem, httpClientFactory);
+        CurrentProject = new Project(FileHandler, fileSystem);
         ExportStatus = ExportStatus.NotExporting;
     }
 
@@ -73,7 +72,7 @@ public class ProjectService : IProjectService
 
         if (imageFilePaths != null && imageFilePaths.Length != 0)
         {
-            await CurrentProject.AddImagesAsync(imageFilePaths);
+            CurrentProject.AddImages(imageFilePaths);
         }
     }
 

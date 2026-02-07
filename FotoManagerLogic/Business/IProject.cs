@@ -26,7 +26,7 @@ public interface IProject
 
     Task LoadAsync(string projectFilePath);
 
-    Task AddImagesAsync(IEnumerable<string> imageFilePaths);
+    void AddImages(IEnumerable<string> imageFilePaths);
 
     string GetCurrentImageUrl();
 }

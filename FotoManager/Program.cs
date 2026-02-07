@@ -1,14 +1,16 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-using FotoManagerLogic.API;
 using FotoManagerLogic.Business;
 using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,8 +30,6 @@ public class Program
         builder.Services.AddSingleton<IProjectService, ProjectService>();
         builder.Services.AddSingleton<IFileSystem, FileSystem>();
         builder.Services.AddSingleton<IFileHandler, JsonFileHandler>();
-        builder.Services.AddSingleton<IServerImageRepository, ServerImageRepository>();
-        builder.Services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         builder.Services.AddSingleton<IElectronHelper, ElectronHelper>();
         builder.Services.AddSingleton<ITranslator, Translator>();
 
@@ -59,9 +59,28 @@ public class Program
         {
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
-            endpoints.MapControllers();
         });
 #pragma warning restore ASP0014
+
+        app.MapGet("/api/images", (string path) =>
+        {
+            var filePath = Encoding.UTF8.GetString(Convert.FromBase64String(path));
+            if (!File.Exists(filePath))
+            {
+                return Results.NotFound();
+            }
+
+            var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return Results.File(stream, contentType);
+        });
 
         app.MapRazorPages();
 
