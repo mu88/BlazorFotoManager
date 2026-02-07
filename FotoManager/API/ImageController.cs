@@ -74,6 +74,11 @@ public class ImageController(IServerImageRepository serverImageRepository) : Con
         if (rotation != RotateFlipType.RotateNoneFlipNone)
         {
             image.RotateFlip(rotation);
+
+            // Reset the EXIF orientation tag to "Normal" (1) after rotating,
+            // otherwise the rotated pixels + the unchanged tag cause double-rotation.
+            exifProperty.Value = BitConverter.GetBytes((ushort)1);
+            image.SetPropertyItem(exifProperty);
         }
     }
 }
