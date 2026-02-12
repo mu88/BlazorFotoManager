@@ -4,6 +4,8 @@
     <Copyright>Copyright © $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <NoWarn>CA1416</NoWarn>
+    <ElectronIcon>assets\Icon.ico</ElectronIcon>
+    <ElectronSplashScreen>assets\Splashscreen.png</ElectronSplashScreen>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ElectronNET.Core" Version="0.4.0"/>
