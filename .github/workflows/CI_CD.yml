@@ -52,8 +52,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
+        body: ${{ needs.shared_ci_cd.outputs.release_notes }}
         files: |
           sbom.json
           FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
         name: ${{ needs.shared_ci_cd.outputs.version }}
-        body: ${{ needs.shared_ci_cd.outputs.release_notes }}
+        tag_name: ${{ needs.shared_ci_cd.outputs.version }}
