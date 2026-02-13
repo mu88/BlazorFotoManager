@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@0213ed5565c48d2c19f9d2588dc49a79c4339a33
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@e232f5acc01fb9f613c1ca2a414434db1a49fa10
     with:
       dotnet-cache-dependencies-via-lock-file: false # by default, NuGet lock files are used. However, ElectronNET seem to have issues with that
       sonar-key: mu88_BlazorFotoManager
