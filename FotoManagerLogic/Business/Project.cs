@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
@@ -107,7 +108,7 @@ public class Project : IProject
 
     public string GetCurrentImageUrl()
     {
-        var encodedPath = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(CurrentImage.Path));
+        var encodedPath = Convert.ToBase64String(Encoding.UTF8.GetBytes(CurrentImage.Path));
         return $"/api/images?path={Uri.EscapeDataString(encodedPath)}";
     }
 

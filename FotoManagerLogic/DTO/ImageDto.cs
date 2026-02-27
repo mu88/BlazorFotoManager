@@ -3,10 +3,7 @@
 public class ImageDto
 {
     /// <inheritdoc />
-    public ImageDto()
-    {
-        Path = string.Empty;
-    }
+    public ImageDto() => Path = string.Empty;
 
     public string Path { get; set; }
 

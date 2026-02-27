@@ -6,10 +6,7 @@ namespace FotoManagerLogic.IO;
 public class JsonFileHandler : IFileHandler
 {
     /// <inheritdoc />
-    public JsonFileHandler(IFileSystem fileSystem)
-    {
-        FileSystem = fileSystem;
-    }
+    public JsonFileHandler(IFileSystem fileSystem) => FileSystem = fileSystem;
 
     private IFileSystem FileSystem { get; }
 

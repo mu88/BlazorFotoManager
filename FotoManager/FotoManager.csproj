@@ -8,22 +8,22 @@
     <ElectronSplashScreen>assets\Splashscreen.png</ElectronSplashScreen>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.Core" Version="0.4.0"/>
-    <PackageReference Include="ElectronNET.Core.AspNet" Version="0.4.0"/>
+    <PackageReference Include="ElectronNET.Core" Version="0.4.0" />
+    <PackageReference Include="ElectronNET.Core.AspNet" Version="0.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FotoManagerLogic\FotoManagerLogic.csproj"/>
+    <ProjectReference Include="..\FotoManagerLogic\FotoManagerLogic.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="publish\**"/>
-    <Content Remove="publish\**"/>
-    <EmbeddedResource Remove="publish\**"/>
-    <None Remove="publish\**"/>
-    <_ContentIncludedByDefault Remove="publish\**"/>
+    <Compile Remove="publish\**" />
+    <Content Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+    <_ContentIncludedByDefault Remove="publish\**" />
     <None Update="assets\Icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Folder Include="assets\"/>
-    <Folder Include="wwwroot\"/>
+    <Folder Include="assets\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 </Project>

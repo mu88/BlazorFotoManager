@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-using FotoManagerLogic.Business;
 using FotoManagerLogic.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -62,25 +61,26 @@ public class Program
         });
 #pragma warning restore ASP0014
 
-        app.MapGet("/api/images", (string path) =>
-        {
-            var filePath = Encoding.UTF8.GetString(Convert.FromBase64String(path));
-            if (!File.Exists(filePath))
+        app.MapGet("/api/images",
+            (string path) =>
             {
-                return Results.NotFound();
-            }
+                var filePath = Encoding.UTF8.GetString(Convert.FromBase64String(path));
+                if (!File.Exists(filePath))
+                {
+                    return Results.NotFound();
+                }
 
-            var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
-            {
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".gif" => "image/gif",
-                _ => "application/octet-stream"
-            };
+                var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
+                {
+                    ".jpg" or ".jpeg" => "image/jpeg",
+                    ".png" => "image/png",
+                    ".gif" => "image/gif",
+                    _ => "application/octet-stream"
+                };
 
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return Results.File(stream, contentType);
-        });
+                var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                return Results.File(stream, contentType);
+            });
 
         app.MapRazorPages();
 

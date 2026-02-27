@@ -6,10 +6,7 @@ namespace FotoManagerLogic.DTO;
 public class ProjectDto
 {
     /// <inheritdoc />
-    public ProjectDto()
-    {
-        Images = new Collection<ImageDto>();
-    }
+    public ProjectDto() => Images = new Collection<ImageDto>();
 
     public int CurrentImageIndex { get; set; }
 

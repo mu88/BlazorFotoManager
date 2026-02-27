@@ -94,8 +94,8 @@ public class ProjectServiceTests
         await _fileHandler.DidNotReceive().WriteAsync(Arg.Any<ProjectDto>(), "MyProject");
     }
 
-    private ProjectService CreateTestee() =>
-        new(_fileHandler,
+    private ProjectService CreateTestee()
+        => new(_fileHandler,
             _fileSystem,
             _electronHelper,
             _translator);

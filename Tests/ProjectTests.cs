@@ -23,12 +23,18 @@ public class ProjectTests
     public void NextImage(int numberOfImages, int numberOfNextCalls, int expectedImageIndex)
     {
         var imageFilePaths = new Collection<string>();
-        for (var i = 0; i < numberOfImages; i++) { imageFilePaths.Add($"Image {i}"); }
+        for (var i = 0; i < numberOfImages; i++)
+        {
+            imageFilePaths.Add($"Image {i}");
+        }
 
         var testee = CreateTestee();
         testee.AddImages(imageFilePaths);
 
-        for (var i = 0; i < numberOfNextCalls; i++) { testee.NextImage(); }
+        for (var i = 0; i < numberOfNextCalls; i++)
+        {
+            testee.NextImage();
+        }
 
         testee.CurrentImageIndex.Should().Be(expectedImageIndex);
     }
@@ -39,13 +45,22 @@ public class ProjectTests
     public void PreviousImage(int numberOfImages, int numberOfPreviousCalls, int expectedImageIndex)
     {
         var imageFilePaths = new Collection<string>();
-        for (var i = 0; i < numberOfImages; i++) { imageFilePaths.Add($"Image {i}"); }
+        for (var i = 0; i < numberOfImages; i++)
+        {
+            imageFilePaths.Add($"Image {i}");
+        }
 
         var testee = CreateTestee();
         testee.AddImages(imageFilePaths);
-        for (var i = 0; i < numberOfImages; i++) { testee.NextImage(); }
+        for (var i = 0; i < numberOfImages; i++)
+        {
+            testee.NextImage();
+        }
 
-        for (var i = 0; i < numberOfPreviousCalls; i++) { testee.PreviousImage(); }
+        for (var i = 0; i < numberOfPreviousCalls; i++)
+        {
+            testee.PreviousImage();
+        }
 
         testee.CurrentImageIndex.Should().Be(expectedImageIndex);
     }
@@ -64,11 +79,7 @@ public class ProjectTests
     [Test]
     public void Export()
     {
-        var imageFilePaths = new Collection<string>
-        {
-            Path.Combine("input", "Path1.jpg"),
-            Path.Combine("input", "Path2.jpg")
-        };
+        var imageFilePaths = new Collection<string> { Path.Combine("input", "Path1.jpg"), Path.Combine("input", "Path2.jpg") };
         var exportPath = "output";
         var progressActionMock = Substitute.For<Action<double>>();
         var testee = CreateTestee();
@@ -77,7 +88,7 @@ public class ProjectTests
 
         testee.ExportImages(exportPath, progressActionMock);
 
-        _fileSystem.Received(1).Copy(Path.Combine("input", "Path1.jpg"),Path.Combine(exportPath, "Path1_0.jpg"), true);
+        _fileSystem.Received(1).Copy(Path.Combine("input", "Path1.jpg"), Path.Combine(exportPath, "Path1_0.jpg"), true);
         progressActionMock.Received(1).Invoke(1);
     }
 
