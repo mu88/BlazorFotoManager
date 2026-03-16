@@ -8,8 +8,8 @@
     <ElectronSplashScreen>assets\Splashscreen.png</ElectronSplashScreen>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.Core" Version="0.4.0" />
-    <PackageReference Include="ElectronNET.Core.AspNet" Version="0.4.0" />
+    <PackageReference Include="ElectronNET.Core" Version="0.4.1" />
+    <PackageReference Include="ElectronNET.Core.AspNet" Version="0.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FotoManagerLogic\FotoManagerLogic.csproj" />
