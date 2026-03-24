@@ -1,0 +1,10 @@
+<Configuration>
+    <CodeCoverage>
+        <ModulePaths>
+            <Include>
+                <ModulePath>.*FotoManager\.dll$</ModulePath>
+                <ModulePath>.*FotoManagerLogic\.dll$</ModulePath>
+            </Include>
+        </ModulePaths>
+    </CodeCoverage>
+</Configuration>
