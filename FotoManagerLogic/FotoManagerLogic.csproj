@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="MetadataExtractor" Version="2.9.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.9.2" />
   </ItemGroup>
 </Project>

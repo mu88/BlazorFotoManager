@@ -1,5 +1,5 @@
 {
   "name": "C# (.NET)",
-  "image": "ghcr.io/mu88/devcontainers-dotnet:sdk-10.0.103",
+  "image": "ghcr.io/mu88/devcontainers-dotnet:sdk-10.0.201",
   "postStartCommand": "dotnet tool install ElectronNET.CLI -g"
 }
