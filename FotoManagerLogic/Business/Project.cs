@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FotoManagerLogic.DTO;
 using FotoManagerLogic.IO;
@@ -26,10 +26,10 @@ public class Project : IProject
     public int NumberOfImages => Images.Count;
 
     /// <inheritdoc />
-    public int SumOfCopies => Images.Sum(x => x.NumberOfCopies);
+    public int SumOfCopies => Images.Sum(image => image.NumberOfCopies);
 
     /// <inheritdoc />
-    public IImage CurrentImage => Images.ElementAtOrDefault(CurrentImageIndex);
+    public IImage? CurrentImage => Images.ElementAtOrDefault(CurrentImageIndex);
 
     /// <inheritdoc />
     public string ProjectPath { get; set; }
@@ -44,10 +44,10 @@ public class Project : IProject
     private IFileSystem FileSystem { get; }
 
     /// <inheritdoc />
-    public Task SaveAsync()
+    public Task SaveAsync(CancellationToken cancellationToken = default)
     {
         var projectDto = GetProjectDto();
-        return FileHandler.WriteAsync(projectDto, ProjectPath);
+        return FileHandler.WriteAsync(projectDto, ProjectPath, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -86,9 +86,9 @@ public class Project : IProject
     }
 
     /// <inheritdoc />
-    public async Task LoadAsync(string projectFilePath)
+    public async Task LoadAsync(string projectFilePath, CancellationToken cancellationToken = default)
     {
-        var projectDto = await FileHandler.ReadAsync<ProjectDto>(projectFilePath);
+        var projectDto = await FileHandler.ReadAsync<ProjectDto>(projectFilePath, cancellationToken);
         ProjectPath = projectFilePath;
         CurrentImageIndex = projectDto.CurrentImageIndex;
         foreach (var imageDto in projectDto.Images)
@@ -106,24 +106,9 @@ public class Project : IProject
         }
     }
 
-    public string GetCurrentImageUrl()
-    {
-        var encodedPath = Convert.ToBase64String(Encoding.UTF8.GetBytes(CurrentImage.Path));
-        return $"/api/images?path={Uri.EscapeDataString(encodedPath)}";
-    }
-
     private ProjectDto GetProjectDto()
     {
-        var result = new ProjectDto { CurrentImageIndex = CurrentImageIndex };
-
-        var images = new Collection<ImageDto>();
-        foreach (var image in Images)
-        {
-            images.Add(new ImageDto { Path = image.Path, NumberOfCopies = image.NumberOfCopies });
-        }
-
-        result.Images = images;
-
-        return result;
+        var images = Images.Select(image => new ImageDto { Path = image.Path, NumberOfCopies = image.NumberOfCopies });
+        return new ProjectDto { CurrentImageIndex = CurrentImageIndex, Images = images };
     }
 }

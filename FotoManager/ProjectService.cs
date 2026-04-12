@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
@@ -36,7 +39,7 @@ public class ProjectService : IProjectService
     private ITranslator Translator { get; }
 
     /// <inheritdoc />
-    public async Task LoadProjectAsync()
+    public async Task LoadProjectAsync(CancellationToken cancellationToken = default)
     {
         var openDialogOptions = new OpenDialogOptions
         {
@@ -50,12 +53,12 @@ public class ProjectService : IProjectService
 
         if (!string.IsNullOrWhiteSpace(projectFilePath))
         {
-            await CurrentProject.LoadAsync(projectFilePath);
+            await CurrentProject.LoadAsync(projectFilePath, cancellationToken);
         }
     }
 
     /// <inheritdoc />
-    public async Task LoadImagesAsync()
+    public async Task LoadImagesAsync(CancellationToken cancellationToken = default)
     {
         var openDialogOptions = new OpenDialogOptions
         {
@@ -72,7 +75,7 @@ public class ProjectService : IProjectService
     }
 
     /// <inheritdoc />
-    public async Task SaveProjectAsync()
+    public async Task SaveProjectAsync(CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(CurrentProject.ProjectPath))
         {
@@ -91,11 +94,11 @@ public class ProjectService : IProjectService
             CurrentProject.ProjectPath = saveFilePath;
         }
 
-        await CurrentProject.SaveAsync();
+        await CurrentProject.SaveAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task ExportAsync()
+    public async Task ExportAsync(CancellationToken cancellationToken = default)
     {
         var openDialogOptions = new OpenDialogOptions { Title = Translator.Translate("Please choose the Export location"), Properties = [OpenDialogProperty.openDirectory] };
         var exportPath =
@@ -109,7 +112,7 @@ public class ProjectService : IProjectService
             // the UI won't be refreshed and no status message is displayed.
             ElectronHelper.ReloadBrowserWindow();
 
-            CurrentProject.ExportImages(exportPath, i => ElectronHelper.SetProgressBar(i));
+            CurrentProject.ExportImages(exportPath, progress => ElectronHelper.SetProgressBar(progress));
 
             ExportStatus = ExportStatus.ExportSuccessful;
             ElectronHelper.SetProgressBar(-1); // remove progress bar
@@ -118,5 +121,15 @@ public class ProjectService : IProjectService
             // the UI won't be refreshed and no status message is displayed.
             ElectronHelper.ReloadBrowserWindow();
         }
+    }
+
+    /// <inheritdoc />
+    public string GetCurrentImageUrl()
+    {
+        if (CurrentProject.CurrentImage is null)
+            return string.Empty;
+
+        var encodedPath = Convert.ToBase64String(Encoding.UTF8.GetBytes(CurrentProject.CurrentImage.Path));
+        return $"/api/images?path={Uri.EscapeDataString(encodedPath)}";
     }
 }

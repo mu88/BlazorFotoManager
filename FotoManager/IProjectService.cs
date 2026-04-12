@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using FotoManagerLogic.Business;
 
 namespace FotoManager;
@@ -9,11 +10,13 @@ public interface IProjectService
 
     ExportStatus ExportStatus { get; }
 
-    Task LoadProjectAsync();
+    Task LoadProjectAsync(CancellationToken cancellationToken = default);
 
-    Task LoadImagesAsync();
+    Task LoadImagesAsync(CancellationToken cancellationToken = default);
 
-    Task SaveProjectAsync();
+    Task SaveProjectAsync(CancellationToken cancellationToken = default);
 
-    Task ExportAsync();
+    Task ExportAsync(CancellationToken cancellationToken = default);
+
+    string GetCurrentImageUrl();
 }

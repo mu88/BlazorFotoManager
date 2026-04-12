@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FotoManagerLogic.Business;
@@ -10,13 +11,13 @@ public interface IProject
 
     int SumOfCopies { get; }
 
-    IImage CurrentImage { get; }
+    IImage? CurrentImage { get; }
 
     int CurrentImageIndex { get; }
 
     string ProjectPath { get; set; }
 
-    Task SaveAsync();
+    Task SaveAsync(CancellationToken cancellationToken = default);
 
     void ExportImages(string exportPath, Action<double> progressAction);
 
@@ -24,9 +25,7 @@ public interface IProject
 
     void PreviousImage();
 
-    Task LoadAsync(string projectFilePath);
+    Task LoadAsync(string projectFilePath, CancellationToken cancellationToken = default);
 
     void AddImages(IEnumerable<string> imageFilePaths);
-
-    string GetCurrentImageUrl();
 }

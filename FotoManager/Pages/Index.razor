@@ -64,7 +64,7 @@
             <div class="col">
                 <div class="card bg-light mb-3">
                     <div class="card-body">
-                        <h5 class="card-title text-dark">@Translator.Translate("Current Image") (@ProjectService.CurrentProject.CurrentImage.FileName)</h5>
+                        <h5 class="card-title text-dark">@Translator.Translate("Current Image") (@ProjectService.CurrentProject.CurrentImage?.FileName)</h5>
                         <p class="card-text text-dark" style="height: 1rem;">
                             <button type="button" class="btn btn-link" title="1 @Translator.Translate("Image backward")" @onclick="@ProjectService.CurrentProject.PreviousImage">
                                 <span class="fa fa-chevron-circle-left fa-lg text-dark"></span>
@@ -75,10 +75,10 @@
                             @Translator.Translate("Image") @(ProjectService.CurrentProject.CurrentImageIndex + 1) von @ProjectService.CurrentProject.NumberOfImages
                         </p>
                         <p class="card-text text-dark" style="height: 1rem;">
-                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy less")" @onclick="@ProjectService.CurrentProject.CurrentImage.Decrease">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy less")" @onclick="@ProjectService.CurrentProject.CurrentImage!.Decrease">
                                 <span class="fa fa-minus-circle fa-lg text-dark"></span>
                             </button>
-                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy more")" @onclick="@ProjectService.CurrentProject.CurrentImage.Increase">
+                            <button type="button" class="btn btn-link" title="1 @Translator.Translate("Copy more")" @onclick="@ProjectService.CurrentProject.CurrentImage!.Increase">
                                 <span class="fa fa-plus-circle fa-lg text-dark"></span>
                             </button>
                             @Translator.Translate("Number of Copies"): @ProjectService.CurrentProject.CurrentImage.NumberOfCopies
@@ -101,7 +101,7 @@
     {
         <div class="row">
             <div class="col">
-                <img class="contain" src="@ProjectService.CurrentProject.GetCurrentImageUrl()"/>
+                <img class="contain" src="@ProjectService.GetCurrentImageUrl()"/>
             </div>
         </div>
     }

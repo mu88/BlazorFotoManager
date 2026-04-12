@@ -53,13 +53,8 @@ public class Program
 
         app.UseRouting();
 
-#pragma warning disable ASP0014
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapBlazorHub();
-            endpoints.MapFallbackToPage("/_Host");
-        });
-#pragma warning restore ASP0014
+        app.MapBlazorHub();
+        app.MapFallbackToPage("/_Host");
 
         app.MapGet("/api/images",
             (string path) =>

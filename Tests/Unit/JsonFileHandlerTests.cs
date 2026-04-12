@@ -5,7 +5,7 @@ using FotoManagerLogic.IO;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Tests;
+namespace Tests.Unit;
 
 [Category("Unit")]
 public class JsonFileHandlerTests
@@ -18,10 +18,14 @@ public class JsonFileHandlerTests
     [Test]
     public async Task Deserialize()
     {
-        _fileSystem.ReadAllTextAsync("MyFile").Returns("""{"Path": "Bla", "NumberOfCopies": 3}""");
+        // Arrange
+        _fileSystem.ReadAllTextAsync("MyFile", Arg.Any<System.Threading.CancellationToken>())
+            .Returns("""{"Path": "Bla", "NumberOfCopies": 3}""");
 
+        // Act
         var result = await _testee.ReadAsync<ImageDto>("MyFile");
 
+        // Assert
         result.NumberOfCopies.Should().Be(3);
         result.Path.Should().Be("Bla");
     }
@@ -29,8 +33,10 @@ public class JsonFileHandlerTests
     [Test]
     public async Task Serialize()
     {
+        // Arrange / Act
         await _testee.WriteAsync(new { Id = 1, Name = "Foo" }, "MyFile");
 
-        await _fileSystem.Received(1).WriteAllTextAsync("MyFile", Arg.Any<string>());
+        // Assert
+        await _fileSystem.Received(1).WriteAllTextAsync("MyFile", Arg.Any<string>(), Arg.Any<System.Threading.CancellationToken>());
     }
 }
