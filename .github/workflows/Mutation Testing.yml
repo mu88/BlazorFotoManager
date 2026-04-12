@@ -1,0 +1,38 @@
+name: Mutation Testing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mutation-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+          global-json-file: global.json
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Run mutation testing
+        env:
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+        run: |
+          dotnet stryker \
+            --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
+            --version "${{ github.sha }}" \
+            --output ${{ runner.temp }}/Stryker/
+
+      - name: Archive mutation testing results
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-testing-report
+          path: ${{ runner.temp }}/Stryker/**/*.*
