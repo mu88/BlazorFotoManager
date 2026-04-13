@@ -1,6 +1,7 @@
 name: Mutation Testing
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -15,20 +16,17 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
         with:
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
           global-json-file: global.json
 
       - name: Restore tools
         run: dotnet tool restore
 
       - name: Run mutation testing
-        env:
-          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         run: |
           dotnet stryker \
-            --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
+            --dashboard-api-key "${{ secrets.STRYKER_DASHBOARD_API_KEY }}" \
             --version "${{ github.sha }}" \
+            --config-file stryker-config.json \
             --output ${{ runner.temp }}/Stryker/
 
       - name: Archive mutation testing results

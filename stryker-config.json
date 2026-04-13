@@ -1,0 +1,16 @@
+{
+  "stryker-config": {
+    "project": "FotoManagerLogic/FotoManagerLogic.csproj",
+    "test-projects": [
+      "Tests/Tests.csproj"
+    ],
+    "reporters": [
+      "html",
+      "progress",
+      "dashboard"
+    ],
+    "project-info": {
+      "name": "github.com/mu88/BlazorFotoManager"
+    }
+  }
+}
