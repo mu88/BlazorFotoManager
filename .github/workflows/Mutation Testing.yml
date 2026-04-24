@@ -28,7 +28,7 @@ jobs:
         run: |
           dotnet stryker \
             --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
-            --version "${{ github.sha }}" \
+            --version "${{ github.ref_name }}" \
             --output ${{ runner.temp }}/Stryker/
 
       - name: Archive mutation testing results
