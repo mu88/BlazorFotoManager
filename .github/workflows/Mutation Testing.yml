@@ -25,7 +25,7 @@ jobs:
         run: |
           dotnet stryker \
             --dashboard-api-key "${{ secrets.STRYKER_DASHBOARD_API_KEY }}" \
-            --version "${{ github.sha }}" \
+            --version "${{ github.ref_name }}" \
             --config-file stryker-config.json \
             --output ${{ runner.temp }}/Stryker/
 
