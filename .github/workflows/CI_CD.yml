@@ -49,7 +49,7 @@ jobs:
         subject-path: FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
       with:
         body: ${{ needs.shared_ci_cd.outputs.release_notes }}
