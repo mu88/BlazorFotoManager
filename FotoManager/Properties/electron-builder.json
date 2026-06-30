@@ -7,5 +7,16 @@
   "win": {
     "target": "portable"
   },
-  "icon": "bin/assets/icon.ico"
+  "icon": "bin/assets/icon.ico",
+  "files": [
+    "**/*",
+    "!wwwroot/font-awesome/js/**",
+    "!wwwroot/font-awesome/less/**",
+    "!wwwroot/font-awesome/scss/**",
+    "!wwwroot/font-awesome/metadata/**",
+    "!wwwroot/font-awesome/sprites/**",
+    "!wwwroot/font-awesome/svgs/**",
+    "!wwwroot/font-awesome/css/*.css",
+    "wwwroot/font-awesome/css/all.min.css"
+  ]
 }
