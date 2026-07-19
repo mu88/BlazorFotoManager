@@ -2,6 +2,12 @@ name: Combined CI / Release
 
 on:
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Create as pre-release'
+        required: false
+        default: false
+        type: boolean
   push:
     branches:
       - '**'
@@ -50,7 +56,7 @@ jobs:
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v3
-      if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
+      if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' || inputs.prerelease == true }}
       with:
         body: ${{ needs.shared_ci_cd.outputs.release_notes }}
         files: |
@@ -58,3 +64,4 @@ jobs:
           FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
         name: ${{ needs.shared_ci_cd.outputs.version }}
         tag_name: ${{ needs.shared_ci_cd.outputs.version }}
+        prerelease: ${{ inputs.prerelease || false }}
