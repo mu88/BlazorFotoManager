@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@d95f73b94fe1a68e38caa30a7f33d6ee095368a9 # main
+    uses: mu88/common/.github/workflows/ci-cd.yml@88212c6622e513f916ae6f1cedadf83d57e68d08 # main
     with:
       dotnet-cache-dependencies-via-lock-file: false # by default, NuGet lock files are used. However, ElectronNET seem to have issues with that
       sonar-key: mu88_BlazorFotoManager
@@ -47,7 +47,7 @@ jobs:
       run: dotnet publish FotoManager\FotoManager.csproj /p:PublishProfile=win-x64 /p:Version=${{ needs.shared_ci_cd.outputs.version }}
 
     - name: Generate SBOM and attest build provenance and SBOM
-      uses: mu88/common/.github/actions/attest-provenance-sbom@d95f73b94fe1a68e38caa30a7f33d6ee095368a9 # main
+      uses: mu88/common/.github/actions/attest-provenance-sbom@88212c6622e513f916ae6f1cedadf83d57e68d08 # main
       with:
         is-release: ${{ needs.shared_ci_cd.outputs.is_release }}
         sbom-file: sbom.json
