@@ -1,0 +1,58 @@
+{
+  "version": "3.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@5.10.1",
+      "destination": "wwwroot/font-awesome/",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-brands-400.eot",
+        "webfonts/fa-brands-400.svg",
+        "webfonts/fa-brands-400.ttf",
+        "webfonts/fa-brands-400.woff",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-regular-400.eot",
+        "webfonts/fa-regular-400.svg",
+        "webfonts/fa-regular-400.ttf",
+        "webfonts/fa-regular-400.woff",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-solid-900.eot",
+        "webfonts/fa-solid-900.svg",
+        "webfonts/fa-solid-900.ttf",
+        "webfonts/fa-solid-900.woff",
+        "webfonts/fa-solid-900.woff2"
+      ]
+    },
+    {
+      "library": "bootstrap@4.3.1",
+      "destination": "wwwroot/css/bootstrap/",
+      "fileMappings": [
+        {
+          "root": "dist/css",
+          "destination": "wwwroot/css/bootstrap/",
+          "files": [
+            "bootstrap.min.css",
+            "bootstrap.min.css.map"
+          ]
+        }
+      ]
+    },
+    {
+      "library": "open-iconic@1.1.1",
+      "destination": "wwwroot/css/open-iconic/",
+      "files": [
+        "font/css/open-iconic-bootstrap.min.css",
+        "font/fonts/open-iconic.eot",
+        "font/fonts/open-iconic.otf",
+        "font/fonts/open-iconic.svg",
+        "font/fonts/open-iconic.ttf",
+        "font/fonts/open-iconic.woff",
+        "FONT-LICENSE",
+        "ICON-LICENSE",
+        "README.md"
+      ]
+    }
+  ]
+}

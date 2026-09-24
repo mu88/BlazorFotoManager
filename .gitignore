@@ -334,3 +334,8 @@ coverage.xml
 
 # Stryker output
 StrykerOutput/
+
+# LibMan-managed client-side libraries (restored via `libman restore` in CI)
+FotoManager/wwwroot/font-awesome/
+FotoManager/wwwroot/css/bootstrap/
+FotoManager/wwwroot/css/open-iconic/
