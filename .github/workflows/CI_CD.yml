@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@4b0f537de7133b6d169a85d780e108d3cd5493bc # main
+    uses: mu88/common/.github/workflows/ci-cd.yml@64260e980ed8569be4c4987e318066ca1bfcfe45 # main
     with:
       dotnet-cache-dependencies-via-lock-file: false # by default, NuGet lock files are used. However, ElectronNET seem to have issues with that
       sonar-key: mu88_BlazorFotoManager
@@ -39,7 +39,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Set up .NET
-      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+      uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
       with:
         global-json-file: global.json
 
@@ -47,7 +47,7 @@ jobs:
       run: dotnet publish FotoManager\FotoManager.csproj /p:PublishProfile=win-x64 /p:Version=${{ needs.shared_ci_cd.outputs.version }}
 
     - name: Generate SBOM and attest build provenance and SBOM
-      uses: mu88/common/.github/actions/attest-provenance-sbom@4e3d5313798009ef14a20532bb590147101941e8 # main
+      uses: mu88/common/.github/actions/attest-provenance-sbom@64260e980ed8569be4c4987e318066ca1bfcfe45 # main
       with:
         is-release: ${{ needs.shared_ci_cd.outputs.is_release }}
         sbom-file: sbom.json
@@ -55,7 +55,7 @@ jobs:
         subject-path: FotoManager/publish/Release/net*/*/FotoFlipper_${{ needs.shared_ci_cd.outputs.version }}.exe
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
+      uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3
       if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' || inputs.prerelease == true }}
       with:
         body: ${{ needs.shared_ci_cd.outputs.release_notes }}
