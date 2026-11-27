@@ -11,6 +11,9 @@
     ],
     "project-info": {
       "name": "github.com/mu88/BlazorFotoManager"
+    },
+    "thresholds": {
+      "break": 1
     }
   }
 }
